@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>吉吉喳喳 · 个人博客</title>
+<meta name="description" content="吉吉喳喳的个人博客：记录前端、读书与日常思考。">
+<meta name="theme-color" content="#f8f7f4">
+<meta property="og:type" content="website">
+<meta property="og:title" content="吉吉喳喳 · 个人博客">
+<meta property="og:description" content="前端、读书与日常思考的记录。">
+<!--
+  ============================================================
+  部署（GitHub Pages）
+  1. 新建仓库 blog（或 Jijizhazha-dot.github.io），把本文件放到仓库根目录
+  2. Settings → Pages → Source: Deploy from a branch → main / (root) → Save
+  3. 一两分钟后访问 https://jijizhazha-dot.github.io/blog/
+     若仓库名为 Jijizhazha-dot.github.io，则访问 https://jijizhazha-dot.github.io/
+  ============================================================
+  改内容
+  · 站点作者名/邮箱/头像字：见页面末尾脚本里的 SITE 对象
+  · 文章：见页面末尾脚本里的 POSTS 数组（新增一条就会自动排序、自动生成标签筛选）
+  配色/字号：只改 :root 里的 CSS 变量即可
+  ============================================================
+-->
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6b58'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='Georgia,serif'%3E%E5%90%89%3C/text%3E%3C/svg%3E">
+<style>
+/* ============================================================
+   1. 设计变量 —— 想改配色/字号，基本只改这里
+   ============================================================ */
+:root{
+  --paper:#f8f7f4;
+  --surface:#ffffff;
+  --ink:#16202a;
+  --ink-soft:#42525c;
+  --muted:#75838a;
+  --line:#e7e3db;
+  --accent:#1f6b58;
+  --accent-deep:#155043;
+  --accent-tint:#e9f2ee;
+  --accent-tint-2:#f2f7f4;
+  --radius:14px;
+  --radius-lg:20px;
+  --wrap:1080px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Songti SC","PingFang SC","Microsoft YaHei","Noto Serif SC",serif;
+  --shadow-sm:0 1px 2px rgba(22,32,42,.04);
+  --shadow-md:0 2px 4px rgba(22,32,42,.04),0 18px 34px -22px rgba(22,32,42,.30);
+}
+
+/* ============================================================
+   2. 基础重置与排版
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.75;
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 420px at 12% -8%,#eef4ef 0%,rgba(238,244,239,0) 62%),
+    radial-gradient(900px 380px at 100% 0%,#f3f1ea 0%,rgba(243,241,234,0) 55%),
+    var(--paper);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+::selection{background:#cfe6da;color:var(--accent-deep)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 32px}
+
+.eyebrow{
+  font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 10px;
+}
+.skip{
+  position:absolute;left:-9999px;top:0;background:var(--surface);padding:10px 16px;
+  border:1px solid var(--line);border-radius:8px;z-index:99;
+}
+.skip:focus{left:16px;top:16px}
+
+/* ============================================================
+   3. 顶部导航
+   ============================================================ */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(248,247,244,.78);
+  backdrop-filter:saturate(1.7) blur(10px);
+  -webkit-backdrop-filter:saturate(1.7) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  height:66px;
+}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-mark{
+  width:34px;height:34px;flex:0 0 34px;border-radius:9px;
+  background:linear-gradient(150deg,var(--accent) 0%,var(--accent-deep) 100%);
+  color:#fff;font-family:var(--serif);font-size:19px;line-height:34px;text-align:center;
+  box-shadow:0 2px 6px rgba(31,107,88,.28);
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.2}
+.brand-text strong{font-size:15.5px;font-weight:600;letter-spacing:.01em}
+.brand-text em{
+  font-style:normal;font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);
+}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a{
+  position:relative;padding:8px 12px;border-radius:8px;
+  font-size:14px;color:var(--ink-soft);transition:color .18s ease,background .18s ease;
+}
+.nav a:hover{color:var(--accent);background:var(--accent-tint-2)}
+.nav a.is-active{color:var(--accent);font-weight:600}
+.nav a.is-active::after{
+  content:"";position:absolute;left:12px;right:12px;bottom:1px;height:2px;
+  border-radius:2px;background:var(--accent);
+}
+
+/* ============================================================
+   4. 首屏：简介
+   ============================================================ */
+.hero{
+  display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+  gap:64px;align-items:center;
+  padding-top:78px;padding-bottom:74px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:clamp(34px,3.5vw,46px);
+  line-height:1.24;
+  margin-bottom:22px;
+}
+.hero h1 .hl{
+  position:relative;color:var(--accent-deep);white-space:nowrap;
+  background:linear-gradient(transparent 64%,#cfe6da 64%);
+  padding:0 .08em;
+}
+.lede{color:var(--ink-soft);font-size:16.5px;line-height:1.95;max-width:47ch}
+.lede + .lede{margin-top:14px}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12.5px;color:var(--ink-soft);
+  padding:4px 11px;border:1px solid var(--line);border-radius:999px;
+  background:rgba(255,255,255,.6);
+}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  height:42px;padding:0 20px;border-radius:10px;
+  font-size:14px;font-weight:500;
+  border:1px solid transparent;cursor:pointer;
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease,color .18s ease;
+}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 6px 16px -8px rgba(31,107,88,.7)}
+.btn-primary:hover{background:var(--accent-deep);transform:translateY(-1px)}
+.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:#c6d8cf;color:var(--accent);transform:translateY(-1px)}
+
+.hero-art{
+  margin:0;position:relative;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,#f2f7f3 0%,#e8f0ea 100%);
+  overflow:hidden;
+  box-shadow:var(--shadow-md);
+}
+.hero-art svg{width:100%;height:auto}
+.hero-art figcaption{
+  position:absolute;left:18px;bottom:16px;
+  font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:#41695c;background:rgba(255,255,255,.72);
+  border:1px solid rgba(31,107,88,.14);
+  padding:4px 10px;border-radius:999px;
+}
+
+/* ============================================================
+   5. 文章列表
+   ============================================================ */
+.posts{padding-top:20px;padding-bottom:20px;scroll-margin-top:90px}
+.section-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:32px;
+  padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:30px;
+}
+.section-head h2{font-family:var(--serif);font-size:27px}
+.section-head .count{
+  font-size:12.5px;color:var(--muted);margin-left:10px;font-family:var(--sans);letter-spacing:0;
+}
+.tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.search{position:relative;display:block}
+.search svg{
+  position:absolute;left:11px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.7;
+}
+.search input{
+  width:230px;height:36px;padding:0 12px 0 33px;
+  font-family:inherit;font-size:13.5px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--line);border-radius:9px;
+  transition:border-color .18s ease,box-shadow .18s ease;
+}
+.search input::placeholder{color:#9aa6ab}
+.search input:focus{
+  outline:none;border-color:#b9d3c7;
+  box-shadow:0 0 0 3px rgba(31,107,88,.10);
+}
+.filter{display:flex;gap:6px;flex-wrap:wrap}
+.filter button{
+  font-family:inherit;font-size:13px;color:var(--ink-soft);
+  padding:7px 13px;border-radius:999px;cursor:pointer;
+  background:transparent;border:1px solid var(--line);
+  transition:all .18s ease;
+}
+.filter button:hover{border-color:#c6d8cf;color:var(--accent)}
+.filter button[aria-pressed="true"]{
+  background:var(--accent-tint);border-color:#bcd8ca;color:var(--accent-deep);font-weight:600;
+}
+
+.cards{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;list-style:none;margin:0;padding:0;
+}
+.card{
+  display:flex;flex-direction:column;gap:12px;
+  padding:24px 24px 20px;
+  background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow-sm);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.card:hover{transform:translateY(-3px);border-color:#c9dcd2;box-shadow:var(--shadow-md)}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tag{
+  font-size:11.5px;font-weight:600;letter-spacing:.04em;
+  color:var(--accent);background:var(--accent-tint);
+  padding:3px 9px;border-radius:6px;
+}
+.date{font-size:12px;color:var(--muted);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.card h3{font-family:var(--serif);font-size:19px;line-height:1.5}
+.card h3 a{
+  text-decoration:underline;text-decoration-color:transparent;
+  text-underline-offset:3px;text-decoration-thickness:1px;
+  transition:color .18s ease,text-decoration-color .18s ease;
+}
+.card h3 a:hover{color:var(--accent);text-decoration-color:#b9d3c7}
+.excerpt{
+  font-size:14.5px;line-height:1.85;color:var(--muted);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-foot{
+  margin-top:auto;padding-top:6px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12.5px;color:var(--muted);
+}
+.more{color:var(--accent);font-weight:500;display:inline-flex;align-items:center;gap:5px}
+.more svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8;transition:transform .18s ease}
+.card:hover .more svg{transform:translateX(3px)}
+
+.empty{
+  text-align:center;color:var(--muted);font-size:14px;
+  padding:56px 20px;border:1px dashed var(--line);border-radius:var(--radius);
+  background:rgba(255,255,255,.5);
+}
+
+/* ============================================================
+   6. 关于
+   ============================================================ */
+.about{
+  display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
+  gap:56px;align-items:start;
+  padding-top:72px;padding-bottom:84px;scroll-margin-top:90px;
+}
+.about h2{font-family:var(--serif);font-size:27px;margin-bottom:18px}
+.about p{color:var(--ink-soft);font-size:15.5px;line-height:1.95;max-width:52ch}
+.about p + p{margin-top:12px}
+.about code{
+  font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  font-size:13px;background:var(--accent-tint);color:var(--accent-deep);
+  padding:1px 5px;border-radius:5px;
+}
+.facts{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:6px 22px;box-shadow:var(--shadow-sm);
+}
+.facts dl{margin:0;padding:0}
+.fact{
+  display:grid;grid-template-columns:74px 1fr;gap:14px;align-items:baseline;
+  padding:14px 0;border-bottom:1px solid var(--line);
+}
+.fact:last-child{border-bottom:0}
+.fact dt{font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.fact dd{margin:0;font-size:14.5px;color:var(--ink)}
+.fact dd a{color:var(--accent);border-bottom:1px solid #c3ddd1}
+.fact dd a:hover{color:var(--accent-deep);border-color:var(--accent-deep)}
+
+/* ============================================================
+   7. 页脚
+   ============================================================ */
+.site-footer{
+  border-top:1px solid var(--line);
+  background:rgba(255,255,255,.5);
+}
+.footer-inner{
+  display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;
+  padding-top:40px;padding-bottom:44px;
+}
+.footer-brand{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.footer-brand .brand-text strong{font-size:14.5px}
+.footer-note{font-size:13px;color:var(--muted);line-height:1.8;max-width:34ch}
+.footer-col h4{
+  margin:0 0 12px;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;
+}
+.footer-col ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.footer-col a{font-size:13.5px;color:var(--ink-soft)}
+.footer-col a:hover{color:var(--accent)}
+.copyright{
+  border-top:1px solid var(--line);
+  padding:18px 0 26px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-size:12.5px;color:var(--muted);
+}
+.copyright .dot{opacity:.45}
+
+/* ============================================================
+   8. 入场动画（尊重系统「减少动态效果」设置）
+   ============================================================ */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.reveal.is-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .card:hover{transform:none}
+}
+
+/* ============================================================
+   9. 窄屏兜底（主要面向电脑，这里只保证不破版）
+   ============================================================ */
+@media (max-width:900px){
+  .wrap{padding:0 22px}
+  .hero{grid-template-columns:1fr;gap:36px;padding-top:48px;padding-bottom:48px}
+  .hero-art{max-width:460px}
+  .cards{grid-template-columns:1fr}
+  .section-head{flex-direction:column;align-items:flex-start;gap:18px}
+  .tools{justify-content:flex-start}
+  .search input{width:100%;min-width:200px}
+  .about{grid-template-columns:1fr;gap:32px;padding-top:48px;padding-bottom:56px}
+  .footer-inner{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .nav a{padding:8px}
+  .footer-inner{grid-template-columns:1fr}
+  .copyright{flex-direction:column;align-items:flex-start;gap:6px}
+}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">跳到正文</a>
+
+<!-- ========================= 顶部导航 ========================= -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top" aria-label="回到顶部">
+      <span class="brand-mark" aria-hidden="true">吉</span>
+      <span class="brand-text">
+        <strong id="brand-name">吉吉喳喳</strong>
+        <em>Personal Blog</em>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="#posts">文章</a>
+      <a href="#about">关于</a>
+      <a href="https://github.com/Jijizhazha-dot" data-github target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ========================= 首屏 / 简介 ========================= -->
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow">Personal Blog · 记录与思考</p>
+      <h1 id="hero-title">你好，我是<br><span class="hl">吉吉喳喳</span>。</h1>
+      <p class="lede">
+        一个写代码、也写字的人。平时在前端和工具链之间来回折腾，
+        喜欢把复杂的东西拆开、讲清楚，再顺手记下来。
+      </p>
+      <p class="lede">
+        这里是我的数字笔记本：会写下踩过的坑、读过的书，
+        以及一些还没想明白的问题。更新不快，但都是自己写过的。
+      </p>
+
+      <div class="hero-tags" aria-label="关注方向">
+        <span class="chip">前端工程化</span>
+        <span class="chip">设计系统</span>
+        <span class="chip">读书笔记</span>
+        <span class="chip">随手记录</span>
+      </div>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#posts">
+          开始阅读
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/Jijizhazha-dot" data-github target="_blank" rel="noopener noreferrer">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          查看 GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- 首屏插图：纯内联 SVG，不依赖任何外部图片 -->
+    <figure class="hero-art">
+      <svg viewBox="0 0 420 320" role="img" aria-label="抽象的山峦与日出插图">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f7fbf8"/>
+            <stop offset="100%" stop-color="#e6efe9"/>
+          </linearGradient>
+          <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f6c68a"/>
+            <stop offset="100%" stop-color="#e9a05f"/>
+          </linearGradient>
+          <linearGradient id="h1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#bcd9c9"/>
+            <stop offset="100%" stop-color="#a9cbba"/>
+          </linearGradient>
+          <linearGradient id="h2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7cb49b"/>
+            <stop offset="100%" stop-color="#63a189"/>
+          </linearGradient>
+          <linearGradient id="h3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2f7d66"/>
+            <stop offset="100%" stop-color="#1f6b58"/>
+          </linearGradient>
+          <pattern id="grain" width="6" height="6" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r=".55" fill="#1f6b58" opacity=".06"/>
+          </pattern>
+        </defs>
+
+        <rect width="420" height="320" fill="url(#sky)"/>
+        <circle cx="300" cy="96" r="44" fill="url(#sun)" opacity=".92"/>
+        <circle cx="300" cy="96" r="64" fill="none" stroke="#e9a05f" stroke-opacity=".22" stroke-width="1.2"/>
+
+        <!-- 远处山峦 -->
+        <path d="M0 208c46-30 78-44 118-38 44 7 66 34 104 40 40 6 72-22 116-30 32-6 58 4 82 16v124H0Z" fill="url(#h1)" opacity=".85"/>
+        <!-- 近处山峦 -->
+        <path d="M0 250c40-18 74-44 112-44 40 0 58 22 96 30 42 9 70-16 108-16 36 0 70 18 104 34v66H0Z" fill="url(#h2)" opacity=".95"/>
+        <!-- 最前层 -->
+        <path d="M0 288c52-12 88-30 132-22 44 8 64 26 108 24 46-2 78-20 118-22 24-1 46 4 62 10v42H0Z" fill="url(#h3)"/>
+        <rect width="420" height="320" fill="url(#grain)"/>
+
+        <!-- 飞鸟 -->
+        <g stroke="#1f6b58" stroke-opacity=".55" stroke-width="1.6" fill="none" stroke-linecap="round">
+          <path d="M96 78c4-5 8-5 12 0M112 70c4-5 8-5 12 0M150 96c3-4 7-4 10 0"/>
+        </g>
+      </svg>
+      <figcaption>a quiet place to write</figcaption>
+    </figure>
+  </section>
+
+  <!-- ========================= 文章列表 ========================= -->
+  <section class="posts wrap" id="posts" aria-labelledby="posts-title">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Writing</p>
+        <h2 id="posts-title">最近文章<span class="count" id="count"></span></h2>
+      </div>
+      <div class="tools">
+        <label class="search" for="q">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+          <input id="q" type="search" placeholder="搜索标题、摘要或标签" autocomplete="off" aria-label="搜索文章">
+        </label>
+        <div class="filter" id="filter" role="group" aria-label="按标签筛选"></div>
+      </div>
+    </div>
+
+    <ul class="cards" id="list"></ul>
+    <noscript>
+      <p class="empty">文章列表由 JavaScript 渲染。请启用 JavaScript，或直接查看源码里的 POSTS 数组。</p>
+    </noscript>
+    <p class="empty" id="empty" hidden>没有找到匹配的文章，换个关键词试试。</p>
+  </section>
+
+  <!-- ========================= 关于 ========================= -->
+  <section class="about wrap" id="about" aria-labelledby="about-title">
+    <div>
+      <p class="eyebrow">About</p>
+      <h2 id="about-title">关于这个博客</h2>
+      <p>
+        这个站点是纯静态的：一个 <code>index.html</code>，托管在 GitHub Pages 上。
+        没有构建步骤，也没有框架——改一行文字、加一篇文章，都只是编辑这个文件。
+      </p>
+      <p>
+        文章数据写在文件末尾的 <code>POSTS</code> 数组里，按同样的格式追加一条就会自动出现在列表里；
+        标签会自动汇总成筛选按钮，不需要额外配置。
+      </p>
+    </div>
+    <div class="facts">
+      <dl>
+        <div class="fact"><dt>现在</dt><dd>写代码，也写字</dd></div>
+        <div class="fact"><dt>在做</dt><dd>前端工程化 · 设计系统</dd></div>
+        <div class="fact"><dt>喜欢</dt><dd>把复杂的事讲简单</dd></div>
+        <div class="fact"><dt>仓库</dt><dd><a href="https://github.com/Jijizhazha-dot" data-github target="_blank" rel="noopener noreferrer">github.com/Jijizhazha-dot</a></dd></div>
+        <div class="fact"><dt>联系</dt><dd><a id="mail-link" href="mailto:hello@example.com">hello@example.com</a></dd></div>
+      </dl>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========================= 页脚 ========================= -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">
+          <span class="brand-mark" aria-hidden="true">吉</span>
+          <span class="brand-text"><strong>吉吉喳喳</strong></span>
+        </div>
+        <p class="footer-note">慢一点写，认真一点读。<br>本站内容按 CC BY-NC 4.0 共享。</p>
+      </div>
+      <div class="footer-col">
+        <h4>导航</h4>
+        <ul>
+          <li><a href="#top">首页</a></li>
+          <li><a href="#posts">文章</a></li>
+          <li><a href="#about">关于</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>链接</h4>
+        <ul>
+          <li><a href="https://github.com/Jijizhazha-dot" data-github target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a id="mail-link-2" href="mailto:hello@example.com">Email</a></li>
+          <li><a href="https://github.com/Jijizhazha-dot/blog" target="_blank" rel="noopener noreferrer">站点源码</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      <span>© <span id="year">2026</span> 吉吉喳喳 <span class="dot">·</span> 保留所有权利</span>
+      <span>Built with plain HTML &amp; CSS <span class="dot">·</span> Hosted on GitHub Pages</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   想改内容，只需要动下面两个对象：SITE（站点信息）和 POSTS（文章）
+   文章对象字段：
+     title    标题
+     date     日期，格式 YYYY-MM-DD（用来排序和显示）
+     tag      标签，同一个标签会自动生成一个筛选按钮
+     minutes  预计阅读分钟数
+     excerpt  摘要，列表里最多显示三行
+     url      文章链接；暂时没有文章页就先写 "#"
+   ============================================================ */
+const SITE = {
+  name: "吉吉喳喳",
+  email: "hello@example.com",     // 改成你的邮箱
+  github: "https://github.com/Jijizhazha-dot"
+};
+
+const POSTS = [
+  {
+    title: "把博客搬到 GitHub Pages：一个文件就够",
+    date: "2026-02-18",
+    tag: "随笔",
+    minutes: 6,
+    excerpt: "不想再为博客维护一套构建工具，所以把站点压缩到一个 index.html 里。记录这次迁移的取舍：为什么放弃静态生成器，以及纯 HTML 能撑到什么时候。",
+    url: "#"
+  },
+  {
+    title: "CSS Grid 与容器查询：少一点媒体查询，多一点自适应",
+    date: "2026-02-03",
+    tag: "前端",
+    minutes: 9,
+    excerpt: "从「按屏幕宽度断点」转向「按容器宽度决定布局」，卡片列表是最典型的例子。这里整理了我在实际项目里替换媒体查询的几条规则和踩过的坑。",
+    url: "#"
+  },
+  {
+    title: "读《重构》：让代码讲出它本来想讲的故事",
+    date: "2026-01-21",
+    tag: "读书",
+    minutes: 12,
+    excerpt: "重构不是把代码写得更聪明，而是把意图写得更清楚。这本书真正改变我的地方，是「小步前进、随时可运行」这件事本身带来的安全感。",
+    url: "#"
+  },
+  {
+    title: "为什么我把笔记写成一张张卡片",
+    date: "2026-01-09",
+    tag: "笔记",
+    minutes: 7,
+    excerpt: "长文档适合交付，卡片适合思考。卡片逼你把一个想法压到能独立成立的篇幅，也让你在几个月后还能一眼看出当时到底在纠结什么。",
+    url: "#"
+  },
+  {
+    title: "TypeScript 类型的边界感",
+    date: "2025-12-27",
+    tag: "前端",
+    minutes: 8,
+    excerpt: "类型体操写爽了，接手的人会难受。几条我给自己定的规矩：类型服务于调用方，能用联合类型表达的状态就不要用布尔标志拼。",
+    url: "#"
+  },
+  {
+    title: "每周复盘：把注意力收回来",
+    date: "2025-12-14",
+    tag: "随笔",
+    minutes: 5,
+    excerpt: "一年下来最有用的习惯，是每周花二十分钟回答三个问题：这周真正推进了什么、被什么消耗了、下周只做哪一件事。",
+    url: "#"
+  }
+];
+
+/* ---------------------------- 渲染逻辑 ---------------------------- */
+const $ = (sel, root = document) => root.querySelector(sel);
+
+const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+}[ch]));
+
+const fmtDate = (iso) => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso));
+  return m ? `${m[1]}.${m[2]}.${m[3]}` : String(iso);
+};
+
+// 按日期倒序，保证新写的文章排在最前面
+const sorted = [...POSTS].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+const tags = ["全部", ...Array.from(new Set(sorted.map((p) => p.tag).filter(Boolean)))];
+
+const state = { tag: "全部", keyword: "" };
+const listEl = $("#list");
+const emptyEl = $("#empty");
+const filterEl = $("#filter");
+const countEl = $("#count");
+const searchEl = $("#q");
+
+function cardHTML(post) {
+  const url = esc(post.url || "#");
+  return `
+    <li class="card reveal">
+      <div class="card-top">
+        <span class="tag">${esc(post.tag || "未分类")}</span>
+        <span class="date">${esc(fmtDate(post.date))}</span>
+      </div>
+      <h3><a href="${url}">${esc(post.title)}</a></h3>
+      <p class="excerpt">${esc(post.excerpt || "")}</p>
+      <div class="card-foot">
+        <span>${post.minutes ? esc(post.minutes) + " 分钟阅读" : ""}</span>
+        <a class="more" href="${url}" aria-label="阅读《${esc(post.title)}》">
+          阅读全文
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </li>`;
+}
+
+function matches(post) {
+  const byTag = state.tag === "全部" || post.tag === state.tag;
+  if (!byTag) return false;
+  const kw = state.keyword.trim().toLowerCase();
+  if (!kw) return true;
+  const haystack = [post.title, post.excerpt, post.tag].join(" ").toLowerCase();
+  return haystack.includes(kw);
+}
+
+function render() {
+  const visible = sorted.filter(matches);
+  listEl.innerHTML = visible.map(cardHTML).join("");
+  emptyEl.hidden = visible.length > 0;
+  countEl.textContent = visible.length ? `（${visible.length} 篇）` : "";
+
+  // 新插入的卡片也走一次入场动画
+  requestAnimationFrame(() => {
+    listEl.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-in"));
+  });
+}
+
+function renderFilters() {
+  filterEl.innerHTML = tags.map((tag) => `
+    <button type="button" data-tag="${esc(tag)}" aria-pressed="${tag === state.tag}">${esc(tag)}</button>
+  `).join("");
+}
+
+filterEl.addEventListener("click", (event) => {
+  const btn = event.target.closest("button[data-tag]");
+  if (!btn) return;
+  state.tag = btn.dataset.tag;
+  renderFilters();
+  render();
+});
+
+searchEl.addEventListener("input", () => {
+  state.keyword = searchEl.value;
+  render();
+});
+
+// 按 / 快速聚焦搜索框，Esc 清空
+document.addEventListener("keydown", (event) => {
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || "");
+  if (event.key === "/" && !typing) {
+    event.preventDefault();
+    searchEl.focus();
+  }
+  if (event.key === "Escape" && document.activeElement === searchEl) {
+    searchEl.value = "";
+    state.keyword = "";
+    render();
+    searchEl.blur();
+  }
+});
+
+/* ---------------- 站点信息填充 ---------------- */
+$("#brand-name").textContent = SITE.name;
+$("#year").textContent = new Date().getFullYear();
+document.querySelectorAll("[data-github]").forEach((a) => { a.href = SITE.github; });
+$("#mail-link").textContent = SITE.email;
+$("#mail-link").href = "mailto:" + SITE.email;
+$("#mail-link-2").textContent = SITE.email;
+$("#mail-link-2").href = "mailto:" + SITE.email;
+
+/* ---------------- 首屏 / 关于的入场动画 ---------------- */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("is-in");
+      io.unobserve(entry.target);
+    }
+  });
+}, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+document.querySelectorAll(".hero-copy, .hero-art, .about > *").forEach((el) => {
+  el.classList.add("reveal");
+  io.observe(el);
+});
+
+/* ---------------- 导航高亮 ---------------- */
+const navLinks = Array.from(document.querySelectorAll(".nav a[href^='#']"));
+const sections = navLinks
+  .map((link) => document.querySelector(link.getAttribute("href")))
+  .filter(Boolean);
+
+const navIO = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    navLinks.forEach((link) => {
+      link.classList.toggle("is-active", link.getAttribute("href") === "#" + entry.target.id);
+    });
+  });
+}, { rootMargin: "-45% 0px -50% 0px" });
+sections.forEach((section) => navIO.observe(section));
+
+/* ---------------- 初始化 ---------------- */
+renderFilters();
+render();
+</script>
+</body>
+</html>
