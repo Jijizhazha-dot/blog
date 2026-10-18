@@ -1,0 +1,16 @@
+{
+  "albums": [
+  {"dir":"bizhi","name":"壁纸","date":"2026-10-19","desc":"电脑壁纸","photos":[
+      {"file":"P1.jpg","title":"壁纸 · 01"},
+      {"file":"P2.jpg","title":"壁纸 · 02"},
+      {"file":"P3.jpg","title":"壁纸 · 03"},
+      {"file":"P4.jpg","title":"壁纸 · 04"}
+    ]},
+  {"dir":"sichuan","name":"四川","date":"2026-10-19","desc":"山地、丘陵、平原、高原，一次把四种地貌看全。","photos":[
+      {"file":"2026-10-19-sichuan-2.jpg","title":"四川 · 01"},
+      {"file":"2026-10-19-sichuan-4.jpg","title":"四川 · 02"},
+      {"file":"2026-10-19-sichuan-26.jpg","title":"四川 · 03"},
+      {"file":"2026-10-19-sichuan-29.jpg","title":"四川 · 04"}
+    ]}
+  ]
+}
