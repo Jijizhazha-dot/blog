@@ -1,0 +1,35 @@
+{
+  "albums": [
+  {"dir":"sichuan","name":"四川","date":"2026-10-19","desc":"山地、丘陵、平原、高原，一次把四种地貌看全。","photos":[
+      {"file":"2026-10-19-sichuan-1.jpg","title":"四川 · 01"},
+      {"file":"2026-10-19-sichuan-2.jpg","title":"四川 · 02"},
+      {"file":"2026-10-19-sichuan-3.jpg","title":"四川 · 03"},
+      {"file":"2026-10-19-sichuan-4.jpg","title":"四川 · 04"},
+      {"file":"2026-10-19-sichuan-5.jpg","title":"四川 · 05"},
+      {"file":"2026-10-19-sichuan-6.jpg","title":"四川 · 06"},
+      {"file":"2026-10-19-sichuan-7.jpg","title":"四川 · 07"},
+      {"file":"2026-10-19-sichuan-8.jpg","title":"四川 · 08"},
+      {"file":"2026-10-19-sichuan-9.jpg","title":"四川 · 09"},
+      {"file":"2026-10-19-sichuan-10.jpg","title":"四川 · 10"},
+      {"file":"2026-10-19-sichuan-11.jpg","title":"四川 · 11"},
+      {"file":"2026-10-19-sichuan-12.jpg","title":"四川 · 12"},
+      {"file":"2026-10-19-sichuan-13.jpg","title":"四川 · 13"},
+      {"file":"2026-10-19-sichuan-14.jpg","title":"四川 · 14"},
+      {"file":"2026-10-19-sichuan-15.jpg","title":"四川 · 15"},
+      {"file":"2026-10-19-sichuan-16.jpg","title":"四川 · 16"},
+      {"file":"2026-10-19-sichuan-17.jpg","title":"四川 · 17"},
+      {"file":"2026-10-19-sichuan-18.jpg","title":"四川 · 18"},
+      {"file":"2026-10-19-sichuan-19.jpg","title":"四川 · 19"},
+      {"file":"2026-10-19-sichuan-20.jpg","title":"四川 · 20"},
+      {"file":"2026-10-19-sichuan-21.jpg","title":"四川 · 21"},
+      {"file":"2026-10-19-sichuan-22.jpg","title":"四川 · 22"},
+      {"file":"2026-10-19-sichuan-23.jpg","title":"四川 · 23"},
+      {"file":"2026-10-19-sichuan-24.jpg","title":"四川 · 24"},
+      {"file":"2026-10-19-sichuan-25.jpg","title":"四川 · 25"},
+      {"file":"2026-10-19-sichuan-26.jpg","title":"四川 · 26"},
+      {"file":"2026-10-19-sichuan-27.jpg","title":"四川 · 27"},
+      {"file":"2026-10-19-sichuan-28.jpg","title":"四川 · 28"},
+      {"file":"2026-10-19-sichuan-29.jpg","title":"四川 · 29"}
+    ]}
+  ]
+}
