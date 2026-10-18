@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>标签 · 吉吉喳喳</title>
+<meta name="description" content="按标签浏览文章">
+<meta name="theme-color" content="#f8f7f4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6b58'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='Georgia,serif'%3E%E5%90%89%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#f8f7f4;
+  --surface:#ffffff;
+  --ink:#16202a;
+  --ink-soft:#42525c;
+  --muted:#75838a;
+  --line:#e7e3db;
+  --accent:#1f6b58;
+  --accent-deep:#155043;
+  --accent-tint:#e9f2ee;
+  --accent-tint-2:#f2f7f4;
+  --wrap:1000px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Songti SC","PingFang SC","Microsoft YaHei","Noto Serif SC",serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--sans);font-size:16px;line-height:1.7;color:var(--ink);
+  background:
+    radial-gradient(1100px 420px at 12% -8%,#eef4ef 0%,rgba(238,244,239,0) 62%),
+    radial-gradient(900px 380px at 100% 0%,#f3f1ea 0%,rgba(243,241,234,0) 55%),
+    var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+h1,h2{margin:0;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+button{font-family:inherit}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 32px}
+
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(248,247,244,.82);
+  backdrop-filter:saturate(1.7) blur(10px);
+  -webkit-backdrop-filter:saturate(1.7) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  width:100%;max-width:1080px;margin:0 auto;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;height:66px;
+}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-mark{
+  width:34px;height:34px;flex:0 0 34px;border-radius:9px;
+  background:linear-gradient(150deg,var(--accent) 0%,var(--accent-deep) 100%);
+  color:#fff;font-family:var(--serif);font-size:19px;line-height:34px;text-align:center;
+  box-shadow:0 2px 6px rgba(31,107,88,.28);
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.2}
+.brand-text strong{font-size:15.5px;font-weight:600}
+.brand-text em{font-style:normal;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.nav{display:flex;align-items:center;gap:2px}
+.nav a{
+  position:relative;padding:8px 10px;border-radius:7px;
+  font-size:13.5px;letter-spacing:.01em;color:var(--ink-soft);transition:color .18s ease;
+}
+.nav a:hover{color:var(--accent)}
+.nav a.is-active{color:var(--ink);font-weight:600}
+.nav a.is-active::after{
+  content:"";position:absolute;left:10px;right:10px;bottom:2px;height:2px;border-radius:2px;background:var(--accent);
+}
+
+main{padding:44px 0 64px}
+.page-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  padding-bottom:14px;margin-bottom:22px;border-bottom:1px solid var(--line);
+}
+.eyebrow{
+  font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 8px;
+}
+.page-head h1{font-family:var(--serif);font-size:27px}
+.page-head .count{font-size:12.5px;color:var(--muted);margin-left:8px;font-weight:400}
+
+.sort{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.sort span{margin-right:2px}
+.sort button{
+  padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+  background:transparent;color:var(--ink-soft);font-size:13px;cursor:pointer;
+  transition:all .16s ease;
+}
+.sort button:hover{border-color:#c6d8cf;color:var(--accent)}
+.sort button[aria-pressed="true"]{
+  background:var(--accent-tint);border-color:#bcd8ca;color:var(--accent-deep);font-weight:600;
+}
+
+/* 标签云 */
+.cloud{display:flex;flex-wrap:wrap;gap:10px}
+.tag{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;border:1px solid var(--line);border-radius:999px;
+  background:var(--surface);color:var(--ink-soft);font-size:14px;
+  cursor:pointer;transition:all .16s ease;
+}
+.tag:hover{border-color:#bcd8ca;color:var(--accent-deep);transform:translateY(-1px)}
+.tag .n{
+  font-size:12px;color:var(--muted);background:var(--accent-tint-2);
+  border-radius:999px;padding:1px 7px;font-variant-numeric:tabular-nums;
+}
+.tag.is-on{background:var(--accent-tint);border-color:#bcd8ca;color:var(--accent-deep);font-weight:600}
+.tag.is-on .n{background:#fff;color:var(--accent-deep)}
+
+.group{margin-bottom:26px}
+.group:last-child{margin-bottom:0}
+.group h3{
+  margin:0 0 12px;font-size:12px;font-weight:600;letter-spacing:.14em;color:var(--muted);
+  text-transform:uppercase;
+}
+.group .cloud{gap:8px}
+
+/* 某个标签下的文章 */
+.detail{margin-top:6px}
+.detail-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.detail-head h2{font-family:var(--serif);font-size:20px}
+.detail-head .back{
+  font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;
+}
+.detail-head .back:hover{color:var(--accent)}
+.list-box{border:1px solid #dfe3e0;background:var(--surface)}
+.row{
+  display:flex;align-items:baseline;gap:10px;padding:14px 18px;
+  border-bottom:1px dashed #d7dbd8;transition:background .16s ease;
+}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--accent-tint-2)}
+.row .tri{flex:0 0 auto;font-size:10px;line-height:1.9;color:var(--accent);transform:translateY(-1px)}
+.row .title{flex:1 1 auto;min-width:0;font-size:15.5px;color:var(--ink-soft);line-height:1.6}
+.row:hover .title{color:var(--accent-deep)}
+.row .date{flex:0 0 auto;font-size:14px;color:#8b959b;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+.state{padding:40px 20px;text-align:center;font-size:14px;color:var(--muted);border:1px dashed var(--line);background:rgba(255,255,255,.6)}
+.state a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+[hidden]{display:none !important}
+
+@media (max-width:700px){
+  .wrap{padding:0 18px}
+  .header-inner{padding:0 18px;height:auto;flex-wrap:wrap;gap:8px;padding-top:10px;padding-bottom:10px}
+  .nav{max-width:100%;overflow-x:auto}
+  .nav a{white-space:nowrap}
+  main{padding-top:28px}
+  .row{padding:12px 14px;gap:8px}
+  .row .title{font-size:15px}
+  .row .date{font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="回到首页">
+      <span class="brand-mark" aria-hidden="true">吉</span>
+      <span class="brand-text">
+        <strong>吉吉喳喳</strong>
+        <em>Personal Blog</em>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html">首页</a>
+      <a href="archive.html">归档</a>
+      <a href="tags.html" class="is-active">标签</a>
+      <a href="https://github.com/Jijizhazha-dot" target="_blank" rel="noopener noreferrer">代码</a>
+      <a href="archive.html">分类</a>
+      <a href="index.html#about">关于</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Tags</p>
+      <h1>全部标签<span class="count" id="count"></span></h1>
+    </div>
+    <div class="sort" role="group" aria-label="排序方式">
+      <span>排序</span>
+      <button type="button" data-sort="hot" aria-pressed="true">按热度</button>
+      <button type="button" data-sort="letter" aria-pressed="false">按首字母</button>
+    </div>
+  </div>
+
+  <div id="cloud" class="cloud"></div>
+  <p class="state" id="state">正在读取标签…</p>
+
+  <div class="detail" id="detail" hidden>
+    <div class="detail-head">
+      <h2 id="detail-title"></h2>
+      <a class="back" href="tags.html">← 返回全部标签</a>
+    </div>
+    <div id="detail-list"></div>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  const $ = (sel) => document.querySelector(sel);
+  const cloudEl = $("#cloud");
+  const stateEl = $("#state");
+  const detailEl = $("#detail");
+  const CACHE_TTL = 10 * 60 * 1000;
+  const cacheKey = () => "dsh-tags:" + location.host + location.pathname;
+
+  /* ---------- 数据来源：先看 posts/index.json（带元数据，1 个请求） ---------- */
+  function readCache() {
+    try {
+      const raw = localStorage.getItem(cacheKey());
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      return Array.isArray(data.posts) ? data : null;
+    } catch (error) { return null; }
+  }
+
+  function writeCache(posts) {
+    try { localStorage.setItem(cacheKey(), JSON.stringify({ ts: Date.now(), posts: posts })); } catch (error) { }
+  }
+
+  function detectRepo() {
+    const m = /^([^.]+)\.github\.io$/i.exec(location.hostname || "");
+    if (!m) return null;
+    const segs = location.pathname.split("/").filter(Boolean);
+    const first = segs[0] && !/\.html?$/i.test(segs[0]) ? segs[0] : "";
+    return { owner: m[1], repo: first || m[1] + ".github.io" };
+  }
+
+  const isPostFile = (name) => /\.md$/i.test(name) && name.charAt(0) !== "_";
+
+  function parseMeta(text) {
+    const src = String(text).replace(/\r\n?/g, "\n");
+    const m = /^---[ \t]*\n([\s\S]*?)\n---[ \t]*\n?/.exec(src);
+    if (!m) return {};
+    const meta = {};
+    m[1].split("\n").forEach((line) => {
+      const kv = /^([A-Za-z0-9_-]+)\s*:\s*(.*)$/.exec(line);
+      if (!kv) return;
+      let value = kv[2].trim();
+      if (/^(".*"|'.*')$/.test(value)) value = value.slice(1, -1);
+      meta[kv[1]] = value;
+    });
+    return meta;
+  }
+
+  // index.json 里可能是 {"file","title","date","tag"} 对象，也可能是纯文件名（旧格式）
+  function normaliseEntry(entry) {
+    if (typeof entry === "string") {
+      const slug = entry.replace(/\.md$/i, "");
+      return { file: entry, slug: slug, title: slug, date: "", tag: "未分类" };
+    }
+    if (!entry || !entry.file) return null;
+    return {
+      file: entry.file,
+      slug: String(entry.file).replace(/\.md$/i, ""),
+      title: entry.title || String(entry.file).replace(/\.md$/i, ""),
+      date: entry.date || "",
+      tag: entry.tag || "未分类"
+    };
+  }
+
+  async function fromManifest() {
+    const res = await fetch("posts/index.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("index.json " + res.status);
+    const data = await res.json();
+    const list = Array.isArray(data) ? data : (data && data.posts) || [];
+    const posts = list.map(normaliseEntry).filter(Boolean);
+    return posts.length ? posts : null;
+  }
+
+  async function fromApi(target) {
+    const res = await fetch("https://api.github.com/repos/" + target.owner + "/" + target.repo + "/contents/posts",
+      { headers: { Accept: "application/vnd.github+json" }, cache: "no-cache" });
+    if (!res.ok) throw new Error("GitHub API " + res.status);
+    const items = await res.json();
+    return (Array.isArray(items) ? items : [])
+      .filter((item) => item && item.type === "file" && isPostFile(item.name))
+      .map((item) => item.name);
+  }
+
+  async function fromJsDelivr(target) {
+    const url = "https://data.jsdelivr.com/v1/packages/gh/" + target.owner + "/" + target.repo + "@main?structure=flat";
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) throw new Error("jsDelivr " + res.status);
+    const data = await res.json();
+    return (Array.isArray(data.files) ? data.files : [])
+      .map((file) => String(file && file.name ? file.name : ""))
+      .filter((name) => name.indexOf("/posts/") === 0)
+      .map((name) => name.slice("/posts/".length))
+      .filter(isPostFile);
+  }
+
+  async function loadOne(name, target) {
+    const slug = name.replace(/\.md$/i, "");
+    const urls = [];
+    if (target) urls.push("https://raw.githubusercontent.com/" + target.owner + "/" + target.repo + "/main/posts/" + encodeURIComponent(name));
+    urls.push("posts/" + encodeURIComponent(name));
+    for (const url of urls) {
+      try {
+        const res = await fetch(url, { cache: "no-cache" });
+        if (!res.ok) continue;
+        const meta = parseMeta(await res.text());
+        const fromName = /^(\d{4}-\d{2}-\d{2})/.exec(slug);
+        return {
+          file: name, slug: slug,
+          title: meta.title || slug,
+          date: /^\d{4}-\d{2}-\d{2}$/.test(meta.date || "") ? meta.date : (fromName ? fromName[1] : ""),
+          tag: meta.tag || "未分类"
+        };
+      } catch (error) { /* 换下一个 */ }
+    }
+    return { file: name, slug: slug, title: slug, date: "", tag: "未分类" };
+  }
+
+  async function loadPosts() {
+    const cached = readCache();
+    if (cached && Date.now() - cached.ts < CACHE_TTL) return cached.posts;
+
+    // 1) 清单（1 个请求，最快）
+    try {
+      const posts = await fromManifest();
+      if (posts) {
+        writeCache(posts);
+        return posts;
+      }
+    } catch (error) { /* 继续 */ }
+
+    // 2) API / jsDelivr 列目录 + 逐个读 md
+    const target = detectRepo();
+    const listers = [];
+    if (target) listers.push(() => fromApi(target), () => fromJsDelivr(target));
+
+    for (const lister of listers) {
+      let names = [];
+      try { names = await lister(); } catch (error) { continue; }
+      if (!names.length) continue;
+      const posts = await Promise.all(names.map((name) => loadOne(name, target)));
+      posts.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      writeCache(posts);
+      return posts;
+    }
+    return cached ? cached.posts : [];
+  }
+
+  /* ---------- 标签归类 ---------- */
+  // 一篇文章可以写 tags: a, b；也兼容只有 tag 的旧格式
+  function tagsOf(post) {
+    return String(post.tag || "")
+      .split(/[,，、/|]/)
+      .map((t) => t.trim())
+      .filter(Boolean);
+  }
+
+  const collator = new Intl.Collator("zh-Hans-CN", { sensitivity: "base" });
+  // 拼音首字母的锚点字：按拼音顺序排列，用来把中文标签归到 A~Z
+  // 注意汉语拼音没有 i / u / v 开头的音节（写作 y / w / yu），所以这里跳过了这三个字母
+  const ANCHORS = [
+    ["A", "阿"], ["B", "八"], ["C", "擦"], ["D", "搭"], ["E", "蛾"], ["F", "发"],
+    ["G", "噶"], ["H", "哈"], ["J", "鸡"], ["K", "咖"], ["L", "拉"], ["M", "妈"],
+    ["N", "拿"], ["O", "哦"], ["P", "啪"], ["Q", "期"], ["R", "然"], ["S", "撒"],
+    ["T", "塌"], ["W", "挖"], ["X", "昔"], ["Y", "压"], ["Z", "匝"]
+  ];
+
+  function initialOf(tag) {
+    const first = String(tag).charAt(0);
+    if (/[A-Za-z]/.test(first)) return first.toUpperCase();
+    if (/[0-9]/.test(first)) return "#";
+    let found = "#";
+    for (let i = 0; i < ANCHORS.length; i++) {
+      if (collator.compare(ANCHORS[i][1], tag) <= 0) found = ANCHORS[i][0];
+      else break;
+    }
+    return found;
+  }
+
+  /* ---------- 渲染 ---------- */
+  let allPosts = [];
+  let sortMode = "hot";
+  const selectedTag = new URLSearchParams(location.search).get("tag") || "";
+
+  function buildTags(posts) {
+    const map = new Map();
+    posts.forEach((post) => {
+      tagsOf(post).forEach((tag) => {
+        if (!map.has(tag)) map.set(tag, []);
+        map.get(tag).push(post);
+      });
+    });
+    return Array.from(map, ([name, list]) => ({ name: name, posts: list }));
+  }
+
+  function tagButton(tag) {
+    const on = selectedTag && tag.name === selectedTag ? " is-on" : "";
+    return '<button type="button" class="tag' + on + '" data-tag="' + escapeAttr(tag.name) + '">' +
+      '<span class="name">' + escapeHtml(tag.name) + "</span>" +
+      '<span class="n">' + tag.posts.length + "</span></button>";
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
+  const escapeAttr = escapeHtml;
+
+  function renderCloud(tags) {
+    $("#count").textContent = tags.length ? "（" + tags.length + " 个）" : "";
+
+    if (!tags.length) {
+      cloudEl.innerHTML = "";
+      stateEl.hidden = false;
+      stateEl.textContent = "还没有标签。文章 front matter 里写 tag: 名称 就会出现在这里。";
+      return;
+    }
+    stateEl.hidden = true;
+
+    if (sortMode === "hot") {
+      const sorted = [...tags].sort((a, b) => b.posts.length - a.posts.length || collator.compare(a.name, b.name));
+      cloudEl.innerHTML = sorted.map(tagButton).join("");
+      return;
+    }
+
+    const groups = new Map();
+    tags.forEach((tag) => {
+      const key = initialOf(tag.name);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(tag);
+    });
+    const order = [...groups.keys()].sort((a, b) => {
+      if (a === "#") return 1;
+      if (b === "#") return -1;
+      return a < b ? -1 : a > b ? 1 : 0;
+    });
+    cloudEl.innerHTML = order.map((key) => {
+      const list = groups.get(key).sort((a, b) => collator.compare(a.name, b.name));
+      return '<div class="group"><h3>' + key + "</h3><div class=\"cloud\">" +
+        list.map(tagButton).join("") + "</div></div>";
+    }).join("");
+    cloudEl.className = "";
+  }
+
+  function renderDetail(tags) {
+    if (!selectedTag) {
+      detailEl.hidden = true;
+      return;
+    }
+    const hit = tags.find((tag) => tag.name === selectedTag);
+    if (!hit) {
+      detailEl.hidden = true;
+      return;
+    }
+    detailEl.hidden = false;
+    $("#detail-title").textContent = "「" + hit.name + "」下的文章（" + hit.posts.length + " 篇）";
+    const posts = [...hit.posts].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    $("#detail-list").innerHTML = '<div class="list-box">' + posts.map((post) => `
+      <a class="row" href="article.html?p=${encodeURIComponent(post.slug)}">
+        <span class="tri" aria-hidden="true">▶</span>
+        <span class="title">${escapeHtml(post.title)}</span>
+        <span class="date">(${escapeHtml(post.date || "—")})</span>
+      </a>`).join("") + "</div>";
+  }
+
+  function refresh() {
+    const tags = buildTags(allPosts);
+    cloudEl.className = "cloud";
+    renderCloud(tags);
+    renderDetail(tags);
+  }
+
+  cloudEl.addEventListener("click", (event) => {
+    const btn = event.target.closest("[data-tag]");
+    if (!btn) return;
+    const tag = btn.getAttribute("data-tag");
+    const params = new URLSearchParams(location.search);
+    params.set("tag", tag);
+    location.search = params.toString();
+  });
+
+  document.querySelectorAll(".sort button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      sortMode = btn.dataset.sort;
+      document.querySelectorAll(".sort button").forEach((other) => {
+        other.setAttribute("aria-pressed", String(other.dataset.sort === sortMode));
+      });
+      refresh();
+    });
+  });
+
+  loadPosts()
+    .then((posts) => {
+      allPosts = posts || [];
+      refresh();
+    })
+    .catch(() => {
+      stateEl.hidden = false;
+      stateEl.innerHTML = '读取标签失败。回<a href="index.html">首页</a>或<a href="archive.html">归档页</a>再试一次。';
+    });
+})();
+</script>
+</body>
+</html>
