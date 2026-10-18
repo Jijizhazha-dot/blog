@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>归档 · 吉吉喳喳</title>
+<meta name="description" content="全部文章归档">
+<meta name="theme-color" content="#f8f7f4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6b58'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='Georgia,serif'%3E%E5%90%89%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#f8f7f4;
+  --surface:#ffffff;
+  --ink:#16202a;
+  --ink-soft:#42525c;
+  --muted:#75838a;
+  --line:#e7e3db;
+  --accent:#1f6b58;
+  --accent-deep:#155043;
+  --accent-tint:#e9f2ee;
+  --accent-tint-2:#f2f7f4;
+  --wrap:1000px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Songti SC","PingFang SC","Microsoft YaHei","Noto Serif SC",serif;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--sans);font-size:16px;line-height:1.7;color:var(--ink);
+  background:
+    radial-gradient(1100px 420px at 12% -8%,#eef4ef 0%,rgba(238,244,239,0) 62%),
+    radial-gradient(900px 380px at 100% 0%,#f3f1ea 0%,rgba(243,241,234,0) 55%),
+    var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+h1,h2{margin:0;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 32px}
+
+/* ---------- 顶栏（与首页一致） ---------- */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(248,247,244,.82);
+  backdrop-filter:saturate(1.7) blur(10px);
+  -webkit-backdrop-filter:saturate(1.7) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  width:100%;max-width:1080px;margin:0 auto;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;height:66px;
+}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-mark{
+  width:34px;height:34px;flex:0 0 34px;border-radius:9px;
+  background:linear-gradient(150deg,var(--accent) 0%,var(--accent-deep) 100%);
+  color:#fff;font-family:var(--serif);font-size:19px;line-height:34px;text-align:center;
+  box-shadow:0 2px 6px rgba(31,107,88,.28);
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.2}
+.brand-text strong{font-size:15.5px;font-weight:600}
+.brand-text em{font-style:normal;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.nav{display:flex;align-items:center;gap:2px}
+.nav a{
+  position:relative;padding:8px 10px;border-radius:7px;
+  font-size:13.5px;letter-spacing:.01em;color:var(--ink-soft);
+  transition:color .18s ease;
+}
+.nav a:hover{color:var(--accent)}
+.nav a.is-active{color:var(--ink);font-weight:600}
+.nav a.is-active::after{
+  content:"";position:absolute;left:10px;right:10px;bottom:2px;height:2px;
+  border-radius:2px;background:var(--accent);
+}
+
+/* ---------- 页面标题 ---------- */
+main{padding:44px 0 64px}
+.page-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  padding-bottom:14px;margin-bottom:22px;border-bottom:1px solid var(--line);
+}
+.eyebrow{
+  font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 8px;
+}
+.page-head h1{font-family:var(--serif);font-size:27px}
+.page-head .hint{font-size:12.5px;color:var(--muted)}
+
+/* ---------- 公告式列表 ---------- */
+.list-box{
+  border:1px solid #dfe3e0;
+  background:var(--surface);
+}
+.row{
+  display:flex;align-items:baseline;gap:10px;
+  padding:14px 18px;
+  border-bottom:1px dashed #d7dbd8;
+  transition:background .16s ease;
+}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--accent-tint-2)}
+.row .tri{
+  flex:0 0 auto;font-size:10px;line-height:1.9;color:var(--accent);
+  transform:translateY(-1px);
+}
+.row .title{
+  flex:1 1 auto;min-width:0;font-size:15.5px;color:var(--ink-soft);line-height:1.6;
+}
+.row:hover .title{color:var(--accent-deep)}
+.row .date{
+  flex:0 0 auto;font-size:14px;color:#8b959b;white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- 分页 ---------- */
+.pager{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;
+  margin-top:18px;font-size:13.5px;color:var(--muted);
+}
+.pager .count{margin-right:6px}
+.pager a,.pager span.link{
+  color:var(--ink-soft);padding:2px 4px;border-radius:5px;transition:color .16s ease,background .16s ease;
+}
+.pager a:hover{color:var(--accent);background:var(--accent-tint)}
+.pager .disabled{color:#b9c0c4;pointer-events:none}
+.pager .current{color:var(--accent-deep);font-weight:600}
+
+.state{
+  padding:44px 20px;text-align:center;font-size:14px;color:var(--muted);
+  border:1px dashed var(--line);background:rgba(255,255,255,.6);
+}
+.state a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+
+@media (max-width:700px){
+  .wrap{padding:0 18px}
+  .header-inner{padding:0 18px;height:auto;flex-wrap:wrap;gap:8px;padding-top:10px;padding-bottom:10px}
+  .nav{max-width:100%;overflow-x:auto}
+  .nav a{white-space:nowrap}
+  main{padding-top:28px}
+  .row{padding:12px 14px;gap:8px}
+  .row .title{font-size:15px}
+  .row .date{font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="回到首页">
+      <span class="brand-mark" aria-hidden="true">吉</span>
+      <span class="brand-text">
+        <strong>吉吉喳喳</strong>
+        <em>Personal Blog</em>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html">首页</a>
+      <a href="archive.html" class="is-active">归档</a>
+      <a href="index.html#posts">标签</a>
+      <a href="https://github.com/Jijizhazha-dot" target="_blank" rel="noopener noreferrer">代码</a>
+      <a href="index.html#posts">分类</a>
+      <a href="index.html#about">关于</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Archive</p>
+      <h1>全部文章</h1>
+    </div>
+    <p class="hint">按发布时间倒序排列</p>
+  </div>
+
+  <div id="list"></div>
+  <div class="pager" id="pager"></div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  const PER_PAGE = 20;
+  const $ = (sel) => document.querySelector(sel);
+  const listEl = $("#list");
+  const pagerEl = $("#pager");
+
+  /* ---------- 与首页一致的三个列表来源 ---------- */
+  const CACHE_TTL = 10 * 60 * 1000;
+  const cacheKey = () => "dsh-archive:" + location.host + location.pathname;
+
+  function readCache() {
+    try {
+      const raw = localStorage.getItem(cacheKey());
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      return Array.isArray(data.posts) ? data : null;
+    } catch (error) { return null; }
+  }
+
+  function writeCache(posts) {
+    try { localStorage.setItem(cacheKey(), JSON.stringify({ ts: Date.now(), posts: posts })); } catch (error) { }
+  }
+
+  function detectRepo() {
+    const m = /^([^.]+)\.github\.io$/i.exec(location.hostname || "");
+    if (!m) return null;
+    const segs = location.pathname.split("/").filter(Boolean);
+    const first = segs[0] && !/\.html?$/i.test(segs[0]) ? segs[0] : "";
+    return { owner: m[1], repo: first || m[1] + ".github.io" };
+  }
+
+  const isPostFile = (name) => /\.md$/i.test(name) && name.charAt(0) !== "_";
+
+  async function listFromGitHub(target) {
+    const res = await fetch("https://api.github.com/repos/" + target.owner + "/" + target.repo + "/contents/posts",
+      { headers: { Accept: "application/vnd.github+json" }, cache: "no-cache" });
+    if (!res.ok) throw new Error("GitHub API " + res.status);
+    const items = await res.json();
+    return (Array.isArray(items) ? items : [])
+      .filter((item) => item && item.type === "file" && isPostFile(item.name))
+      .map((item) => item.name);
+  }
+
+  async function listFromJsDelivr(target) {
+    const url = "https://data.jsdelivr.com/v1/packages/gh/" + target.owner + "/" + target.repo + "@main?structure=flat";
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) throw new Error("jsDelivr " + res.status);
+    const data = await res.json();
+    return (Array.isArray(data.files) ? data.files : [])
+      .map((file) => String(file && file.name ? file.name : ""))
+      .filter((name) => name.indexOf("/posts/") === 0)
+      .map((name) => name.slice("/posts/".length))
+      .filter(isPostFile);
+  }
+
+  async function listFromManifest() {
+    const res = await fetch("posts/index.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("index.json " + res.status);
+    const data = await res.json();
+    const names = Array.isArray(data) ? data : (typeof data === "string" ? [data] : (data && data.posts) || []);
+    return names.map(String).filter(isPostFile);
+  }
+
+  function parseMeta(text) {
+    const src = String(text).replace(/\r\n?/g, "\n");
+    const m = /^---[ \t]*\n([\s\S]*?)\n---[ \t]*\n?/.exec(src);
+    if (!m) return {};
+    const meta = {};
+    m[1].split("\n").forEach((line) => {
+      const kv = /^([A-Za-z0-9_-]+)\s*:\s*(.*)$/.exec(line);
+      if (!kv) return;
+      let value = kv[2].trim();
+      if (/^(".*"|'.*')$/.test(value)) value = value.slice(1, -1);
+      meta[kv[1]] = value;
+    });
+    return meta;
+  }
+
+  async function loadOne(name, target) {
+    const slug = name.replace(/\.md$/i, "");
+    const urls = [];
+    if (target) urls.push("https://raw.githubusercontent.com/" + target.owner + "/" + target.repo + "/main/posts/" + encodeURIComponent(name));
+    urls.push("posts/" + encodeURIComponent(name));
+
+    let text = null;
+    for (const url of urls) {
+      try {
+        const res = await fetch(url, { cache: "no-cache" });
+        if (!res.ok) continue;
+        text = await res.text();
+        break;
+      } catch (error) { /* 换下一个 */ }
+    }
+    const meta = text === null ? {} : parseMeta(text);
+    const fromName = /^(\d{4}-\d{2}-\d{2})/.exec(slug);
+    return {
+      slug: slug,
+      title: meta.title || slug,
+      date: /^\d{4}-\d{2}-\d{2}$/.test(meta.date || "") ? meta.date : (fromName ? fromName[1] : ""),
+      tag: meta.tag || "未分类",
+      url: "article.html?p=" + encodeURIComponent(slug)
+    };
+  }
+
+  async function loadPosts() {
+    const target = detectRepo();
+    const cached = readCache();
+    if (cached && cached.posts.length && Date.now() - cached.ts < CACHE_TTL) return cached.posts;
+
+    const sources = [];
+    if (target) {
+      sources.push(() => listFromGitHub(target));
+      sources.push(() => listFromJsDelivr(target));
+    }
+    sources.push(listFromManifest);
+
+    for (const source of sources) {
+      let names;
+      try { names = await source(); } catch (error) { continue; }
+      if (!names.length) return [];
+      const posts = await Promise.all(names.map((name) => loadOne(name, target)));
+      posts.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      writeCache(posts);
+      return posts;
+    }
+    return cached && cached.posts.length ? cached.posts : null;
+  }
+
+  /* ---------- 渲染 ---------- */
+  function currentPage(total) {
+    const m = /[?&]page=(\d+)/.exec(location.search);
+    const page = m ? parseInt(m[1], 10) : 1;
+    return Math.min(Math.max(page, 1), Math.max(total, 1));
+  }
+
+  function esc(value) {
+    return String(value).replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
+  function render(posts) {
+    if (!posts || !posts.length) {
+      listEl.innerHTML = '<p class="state">还没有文章。往 posts/ 目录上传一个 .md 文件，这里就会出现。</p>';
+      pagerEl.innerHTML = "";
+      return;
+    }
+
+    const pages = Math.max(1, Math.ceil(posts.length / PER_PAGE));
+    const page = currentPage(pages);
+    const slice = posts.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+    listEl.innerHTML = '<div class="list-box">' + slice.map((post) => `
+      <a class="row" href="${esc(post.url)}">
+        <span class="tri" aria-hidden="true">▶</span>
+        <span class="title">${esc(post.title)}</span>
+        <span class="date">(${esc(post.date || "—")})</span>
+      </a>`).join("") + "</div>";
+
+    const link = (label, target) => {
+      const disabled = target < 1 || target > pages || target === page;
+      if (disabled) return '<span class="link disabled">' + label + "</span>";
+      return '<a href="archive.html?page=' + target + '">' + label + "</a>";
+    };
+
+    pagerEl.innerHTML =
+      '<span class="count">共 ' + posts.length + " 条，分 " + pages + " 页，当前第 " +
+      '<span class="current">' + page + "</span> 页</span>" +
+      link("最前页", 1) +
+      link("上一页", page - 1) +
+      link("下一页", page + 1) +
+      link("最后页", pages);
+  }
+
+  listEl.innerHTML = '<p class="state">正在读取 posts/ …</p>';
+  loadPosts()
+    .then(render)
+    .catch(() => {
+      listEl.innerHTML = '<p class="state">读取文章列表失败。回到<a href="index.html">首页</a>重试，或稍后再打开。</p>';
+    });
+})();
+</script>
+</body>
+</html>
