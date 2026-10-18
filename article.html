@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文章 · 吉吉喳喳</title>
+<meta name="description" content="吉吉喳喳的博客文章">
+<meta name="theme-color" content="#f8f7f4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6b58'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='Georgia,serif'%3E%E5%90%89%3C/text%3E%3C/svg%3E">
+<style>
+/* 与 index.html 共用同一套设计变量 */
+:root{
+  --paper:#f8f7f4;
+  --surface:#ffffff;
+  --ink:#16202a;
+  --ink-soft:#42525c;
+  --muted:#75838a;
+  --line:#e7e3db;
+  --accent:#1f6b58;
+  --accent-deep:#155043;
+  --accent-tint:#e9f2ee;
+  --accent-tint-2:#f2f7f4;
+  --radius:14px;
+  --wrap:760px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Songti SC","PingFang SC","Microsoft YaHei","Noto Serif SC",serif;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--sans);font-size:16px;line-height:1.75;color:var(--ink);
+  background:
+    radial-gradient(1100px 420px at 12% -8%,#eef4ef 0%,rgba(238,244,239,0) 62%),
+    radial-gradient(900px 380px at 100% 0%,#f3f1ea 0%,rgba(243,241,234,0) 55%),
+    var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+::selection{background:#cfe6da;color:var(--accent-deep)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 32px}
+
+/* ---------- 顶栏 ---------- */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(248,247,244,.82);
+  backdrop-filter:saturate(1.7) blur(10px);
+  -webkit-backdrop-filter:saturate(1.7) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  width:100%;max-width:1080px;margin:0 auto;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;height:66px;
+}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-mark{
+  width:34px;height:34px;flex:0 0 34px;border-radius:9px;
+  background:linear-gradient(150deg,var(--accent) 0%,var(--accent-deep) 100%);
+  color:#fff;font-family:var(--serif);font-size:19px;line-height:34px;text-align:center;
+  box-shadow:0 2px 6px rgba(31,107,88,.28);
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.2}
+.brand-text strong{font-size:15.5px;font-weight:600}
+.brand-text em{font-style:normal;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.nav{display:flex;align-items:center;gap:2px}
+.nav a{
+  padding:8px 10px;border-radius:7px;font-size:13.5px;color:var(--ink-soft);
+  transition:color .18s ease,background .18s ease;
+}
+.nav a:hover{color:var(--accent);background:var(--accent-tint-2)}
+
+/* ---------- 文章 ---------- */
+main{padding-top:56px;padding-bottom:72px}
+.eyebrow{
+  font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 14px;
+}
+.post h1{
+  font-family:var(--serif);font-size:clamp(28px,3vw,38px);line-height:1.3;
+  margin-bottom:18px;
+}
+.post-meta{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  font-size:13px;color:var(--muted);
+  padding-bottom:26px;border-bottom:1px solid var(--line);margin-bottom:34px;
+}
+.post-meta .tag{
+  font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-tint);
+  padding:3px 9px;border-radius:6px;
+}
+.prose{font-size:16.5px;line-height:1.95;color:var(--ink-soft)}
+.prose > * + *{margin-top:18px}
+.prose h2{
+  font-family:var(--serif);font-size:24px;line-height:1.4;color:var(--ink);
+  margin-top:44px;padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.prose h3{font-family:var(--serif);font-size:19px;color:var(--ink);margin-top:32px}
+.prose h4{font-size:16px;color:var(--ink);margin-top:26px}
+.prose strong{color:var(--ink);font-weight:600}
+.prose ul,.prose ol{padding-left:1.35em}
+.prose li + li{margin-top:6px}
+.prose a{
+  color:var(--accent);text-decoration:underline;
+  text-decoration-color:#c3ddd1;text-underline-offset:3px;
+}
+.prose a:hover{text-decoration-color:var(--accent)}
+.prose blockquote{
+  margin-left:0;margin-right:0;padding:14px 20px;
+  border-left:3px solid #bcd8ca;background:var(--accent-tint-2);
+  border-radius:0 10px 10px 0;color:var(--ink-soft);
+}
+.prose blockquote p{margin:0}
+.prose code{
+  font-family:var(--mono);font-size:13.5px;
+  background:var(--accent-tint);color:var(--accent-deep);
+  padding:1px 5px;border-radius:5px;word-break:break-word;
+}
+.prose pre{
+  margin:0;padding:18px 20px;overflow-x:auto;
+  background:#f4f6f4;border:1px solid var(--line);border-radius:12px;
+}
+.prose pre code{
+  background:none;color:#1d2b25;padding:0;font-size:13px;line-height:1.7;
+}
+.prose img{display:block;margin:0 auto;border-radius:12px;border:1px solid var(--line);max-width:100%}
+.prose p > em:only-child{
+  display:block;margin-top:-2px;text-align:center;
+  font-style:normal;font-size:13px;line-height:1.7;color:var(--muted);
+}
+.prose hr{border:0;border-top:1px solid var(--line);margin:34px 0}
+
+.post-foot{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;
+  margin-top:52px;padding-top:24px;border-top:1px solid var(--line);
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;border-radius:10px;
+  font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  transition:border-color .18s ease,color .18s ease,transform .18s ease;
+}
+.btn:hover{border-color:#c6d8cf;color:var(--accent);transform:translateY(-1px)}
+.link-muted{font-size:13px;color:var(--muted)}
+.link-muted:hover{color:var(--accent)}
+
+/* ---------- 状态提示 ---------- */
+.status{
+  font-size:15px;color:var(--muted);text-align:center;
+  padding:64px 20px;border:1px dashed var(--line);border-radius:var(--radius);
+  background:rgba(255,255,255,.55);
+}
+.status a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- 页脚 ---------- */
+.site-footer{border-top:1px solid var(--line);background:rgba(255,255,255,.5)}
+.footer-inner{
+  max-width:1080px;margin:0 auto;padding:24px 32px;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;
+  font-size:12.5px;color:var(--muted);
+}
+.footer-inner a:hover{color:var(--accent)}
+
+@media (max-width:700px){
+  .wrap{padding:0 22px}
+  .header-inner{padding:0 22px;height:auto;padding-top:10px;padding-bottom:10px;flex-wrap:wrap;gap:8px}
+  main{padding-top:34px;padding-bottom:48px}
+  .prose{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="回到首页">
+      <span class="brand-mark" aria-hidden="true">吉</span>
+      <span class="brand-text">
+        <strong>吉吉喳喳</strong>
+        <em>Personal Blog</em>
+      </span>
+    </a>
+    <nav class="nav" aria-label="导航">
+      <a href="index.html">首页</a>
+      <a href="index.html#posts">全部文章</a>
+      <a id="repo-link" href="https://github.com/Jijizhazha-dot" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <article class="post" id="post" hidden>
+    <p class="eyebrow" id="post-kicker">Article</p>
+    <h1 id="post-title"></h1>
+    <div class="post-meta" id="post-meta"></div>
+    <div class="prose" id="post-body"></div>
+    <div class="post-foot">
+      <a class="btn" href="index.html#posts">← 返回文章列表</a>
+      <a class="link-muted" id="edit-link" href="#" target="_blank" rel="noopener noreferrer" hidden>在 GitHub 上编辑这篇</a>
+    </div>
+  </article>
+  <div class="status" id="status">正在加载文章…</div>
+  <noscript><p class="status">阅读文章需要启用 JavaScript。</p></noscript>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© <span id="year">2026</span> 吉吉喳喳 · 本站内容按 CC BY-NC 4.0 共享</span>
+    <span>Hosted on GitHub Pages</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const $ = (sel) => document.querySelector(sel);
+  const params = new URLSearchParams(location.search);
+  const slug = String(params.get("p") || "").replace(/^.*[\\/]/, "");
+
+  /* ============================================================
+     1. 仓库定位 —— 用来生成「在 GitHub 上编辑」的链接
+     ============================================================ */
+  function repoInfo() {
+    const host = location.hostname || "";
+    const m = /^([^.]+)\.github\.io$/i.exec(host);
+    if (!m) return null;
+    const owner = m[1];
+    const segs = location.pathname.split("/").filter(Boolean);
+    const first = segs[0] && !/\.html?$/i.test(segs[0]) ? segs[0] : "";
+    return { owner, repo: first || owner + ".github.io" };
+  }
+
+  /* ============================================================
+     2. front matter 解析
+     ============================================================ */
+  function splitFrontMatter(text) {
+    const src = String(text).replace(/\r\n?/g, "\n");
+    const m = /^---[ \t]*\n([\s\S]*?)\n---[ \t]*\n?([\s\S]*)$/.exec(src);
+    if (!m) return { meta: {}, body: src };
+    const meta = {};
+    m[1].split("\n").forEach((line) => {
+      const kv = /^([A-Za-z0-9_-]+)\s*:\s*(.*)$/.exec(line);
+      if (!kv) return;
+      let value = kv[2].trim();
+      if (/^(".*"|'.*')$/.test(value)) value = value.slice(1, -1);
+      meta[kv[1]] = value;
+    });
+    return { meta, body: m[2] };
+  }
+
+  /* ============================================================
+     3. 极简 Markdown 渲染器（不依赖任何外部库）
+     支持：# ~ ###### 标题、段落、**加粗**、*斜体*、`行内代码`、
+           ```代码块```、[链接](url)、![图片](url)、- / 1. 列表、
+           > 引用、--- 分割线
+     ============================================================ */
+  const escapeHTML = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[ch]));
+
+  function safeUrl(url) {
+    const u = String(url).trim();
+    // 只挡掉脚本类协议；站内相对路径（如 images/xxx.png）必须放行
+    if (/^(javascript|vbscript|data):/i.test(u)) return "#";
+    return u;
+  }
+
+  function renderInline(text) {
+    let s = escapeHTML(text);
+    s = s.replace(/`([^`]+)`/g, (m, code) => "<code>" + code + "</code>");
+    s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, (m, alt, src) =>
+      '<img src="' + safeUrl(src) + '" alt="' + alt + '" loading="lazy">');
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, label, href) =>
+      '<a href="' + safeUrl(href) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>");
+    s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+    return s;
+  }
+
+  const CODE_TOKEN = "%%CODEBLOCK%%";
+
+  function renderMarkdown(markdown) {
+    const source = String(markdown).replace(/\r\n?/g, "\n");
+    const codeBlocks = [];
+
+    // 先把围栏代码块摘出来，避免里面的 # - > 被当成 Markdown 语法
+    const text = source.replace(/```([A-Za-z0-9#+._-]*)[ \t]*\n([\s\S]*?)```/g, (m, lang, code) => {
+      const cls = lang ? ' class="language-' + escapeHTML(lang) + '"' : "";
+      codeBlocks.push("<pre><code" + cls + ">" + escapeHTML(code.replace(/\n$/, "")) + "</code></pre>");
+      return "\n" + CODE_TOKEN + (codeBlocks.length - 1) + "\n";
+    });
+
+    const out = [];
+    let para = [];
+    let quote = [];
+    let list = null;
+
+    const flushPara = () => {
+      if (para.length) { out.push("<p>" + renderInline(para.join(" ")) + "</p>"); para = []; }
+    };
+    const flushQuote = () => {
+      if (quote.length) { out.push("<blockquote><p>" + renderInline(quote.join(" ")) + "</p></blockquote>"); quote = []; }
+    };
+    const flushList = () => {
+      if (!list) return;
+      out.push("<" + list.type + ">" + list.items.map((item) => "<li>" + renderInline(item) + "</li>").join("") + "</" + list.type + ">");
+      list = null;
+    };
+    const flushAll = () => { flushPara(); flushQuote(); flushList(); };
+
+    for (const raw of text.split("\n")) {
+      const line = raw.replace(/\s+$/, "");
+      const trimmed = line.trim();
+
+      if (trimmed.indexOf(CODE_TOKEN) === 0) {
+        const index = Number(trimmed.slice(CODE_TOKEN.length));
+        if (Number.isInteger(index) && codeBlocks[index] !== undefined) {
+          flushAll();
+          out.push(codeBlocks[index]);
+        }
+        continue;
+      }
+
+      if (!trimmed) { flushAll(); continue; }
+
+      const heading = /^(#{1,6})\s+(.*)$/.exec(trimmed);
+      if (heading) {
+        flushAll();
+        const level = Math.min(heading[1].length + 1, 5);   // 文章标题已是 h1，正文 # 从 h2 起
+        out.push("<h" + level + ">" + renderInline(heading[2]) + "</h" + level + ">");
+        continue;
+      }
+
+      if (/^(-{3,}|\*{3,}|_{3,})$/.test(trimmed)) { flushAll(); out.push("<hr>"); continue; }
+
+      const quoted = /^>\s?(.*)$/.exec(trimmed);
+      if (quoted) { flushPara(); flushList(); quote.push(quoted[1]); continue; }
+
+      const bullet = /^[-*+]\s+(.*)$/.exec(trimmed);
+      const numbered = /^\d+[.)]\s+(.*)$/.exec(trimmed);
+      if (bullet || numbered) {
+        flushPara(); flushQuote();
+        const type = bullet ? "ul" : "ol";
+        if (!list || list.type !== type) { flushList(); list = { type: type, items: [] }; }
+        list.items.push((bullet || numbered)[1]);
+        continue;
+      }
+
+      flushQuote(); flushList();
+      para.push(trimmed);
+    }
+
+    flushAll();
+    return out.join("\n");
+  }
+
+  /* ============================================================
+     4. 页面渲染
+     ============================================================ */
+  const statusEl = $("#status");
+  const postEl = $("#post");
+
+  function fail(html) {
+    statusEl.innerHTML = html;
+    statusEl.hidden = false;
+  }
+
+  function formatDate(iso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ""));
+    return m ? m[1] + "." + m[2] + "." + m[3] : String(iso || "");
+  }
+
+  function showPost(meta, body, slugValue) {
+    const title = meta.title || slugValue;
+    $("#post-kicker").textContent = meta.tag || "Article";
+    $("#post-title").textContent = title;
+    document.title = title + " · 吉吉喳喳";
+
+    const bits = [];
+    if (meta.date) bits.push('<span>' + escapeHTML(formatDate(meta.date)) + "</span>");
+    if (meta.tag) bits.push('<span class="tag">' + escapeHTML(meta.tag) + "</span>");
+    if (meta.minutes) bits.push("<span>约 " + escapeHTML(meta.minutes) + " 分钟</span>");
+    $("#post-meta").innerHTML = bits.join("");
+
+    $("#post-body").innerHTML = renderMarkdown(body);
+
+    const info = repoInfo();
+    if (info) {
+      const edit = $("#edit-link");
+      edit.href = "https://github.com/" + info.owner + "/" + info.repo + "/edit/main/posts/" + encodeURIComponent(slugValue) + ".md";
+      edit.hidden = false;
+      $("#repo-link").href = "https://github.com/" + info.owner + "/" + info.repo;
+    }
+
+    statusEl.hidden = true;
+    postEl.hidden = false;
+  }
+
+  $("#year").textContent = new Date().getFullYear();
+
+  if (!/^[A-Za-z0-9._-]+$/.test(slug) || slug.indexOf("..") !== -1) {
+    fail('没有找到指定的文章。<a href="index.html#posts">回到文章列表</a>');
+    return;
+  }
+
+  fetch("posts/" + encodeURIComponent(slug) + ".md", { cache: "no-cache" })
+    .then((res) => {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.text();
+    })
+    .then((text) => {
+      const parsed = splitFrontMatter(text);
+      showPost(parsed.meta, parsed.body, slug);
+    })
+    .catch((err) => {
+      fail(
+        "读不到这篇文章（" + escapeHTML(err.message) + "）。<br>" +
+        '可能是文件名不对，或者它还没被上传。<a href="index.html#posts">回到文章列表</a>'
+      );
+    });
+})();
+</script>
+</body>
+</html>
