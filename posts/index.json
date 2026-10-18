@@ -1,0 +1,16 @@
+{
+  "generated": "2026-10-18T16:09:00",
+  "posts": [
+  {"file":"2026-01-21-refactoring-notes.md","title":"读《重构》：让代码讲出它本来想讲的故事","date":"2026-01-21","tag":"读书","minutes":"12","category":"","cover":"","featured":""},
+  {"file":"2026-02-03-css-grid-container-queries.md","title":"CSS Grid 与容器查询：少一点媒体查询，多一点自适应","date":"2026-02-03","tag":"前端","minutes":"9","category":"","cover":"","featured":""},
+  {"file":"2026-02-18-hello-github-pages.md","title":"把博客搬到 GitHub Pages：一个文件就够","date":"2026-02-18","tag":"随笔","minutes":"6","category":"","cover":"","featured":""},
+  {"file":"2026-10-18-example-news-note.md","title":"示例：怎么把一条新闻写成自己的笔记","date":"2026-10-18","tag":"随笔","minutes":"4","category":"","cover":"","featured":""},
+  {"file":"2026-10-18-weather-cold-front.md","title":"未来三天：长江以北持续偏冷，东北与长江沿线雨雪频繁","date":"2026-10-18","tag":"天气","minutes":"6","category":"","cover":"","featured":""},
+  {"file":"2026-10-19-el-nino-guide.md","title":"超强厄尔尼诺来了：从成因到应对，一篇讲清","date":"2026-10-19","tag":"科普","minutes":"9","category":"","cover":"images/2026-10-19-el-nino-2.jpg","featured":"true"},
+  {"file":"2026-10-19-hart-morality-of-law.md","title":"读《刑法的道德性》：刑法不能不讲道德，也不能太讲道德","date":"2026-10-19","tag":"读书","minutes":"9","category":"","cover":"","featured":""},
+  {"file":"2026-10-19-linux-commands.md","title":"Linux 常用命令速查：按功能分成 10 类","date":"2026-10-19","tag":"工具","minutes":"10","category":"","cover":"","featured":""},
+  {"file":"2026-10-19-sanguo-shihua.md","title":"当小说压过历史：读吕思勉《三国史话》","date":"2026-10-19","tag":"读书","minutes":"9","category":"","cover":"","featured":""},
+  {"file":"2026-10-19-sichuan.md","title":"四川，凭什么这么巴适","date":"2026-10-19","tag":"地理","minutes":"9","category":"","cover":"images/2026-10-19-sichuan-2.jpg","featured":"true"},
+  {"file":"2026-10-19-xiyou-interview.md","title":"胡胜谈《西游记》：一百回本只是一个坐标","date":"2026-10-19","tag":"读书","minutes":"10","category":"","cover":"","featured":""}
+  ]
+}
