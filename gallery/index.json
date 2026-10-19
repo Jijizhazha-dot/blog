@@ -1,0 +1,38 @@
+{
+  "albums": [
+  {"dir":"bizhi","name":"壁纸","date":"2026-10-19","desc":"电脑壁纸","photos":[
+      {"file":"P1.jpg","title":"壁纸 · 01"},
+      {"file":"P2.jpg","title":"壁纸 · 02"},
+      {"file":"P3.jpg","title":"壁纸 · 03"},
+      {"file":"P4.jpg","title":"壁纸 · 04"},
+      {"file":"P5.jpg","title":"壁纸 · 05"},
+      {"file":"P6.jpg","title":"壁纸 · 06"},
+      {"file":"P7.jpg","title":"壁纸 · 07"},
+      {"file":"P8.jpg","title":"壁纸 · 08"},
+      {"file":"P9.jpg","title":"壁纸 · 09"}
+    ]},
+  {"dir":"photography","name":"摄影","date":"2026-10-19","desc":"日常记录的光影瞬间","photos":[
+      {"file":"photo-01.jpg","title":"摄影 · 01"},
+      {"file":"photo-02.jpg","title":"摄影 · 02"},
+      {"file":"photo-03.jpg","title":"摄影 · 03"},
+      {"file":"photo-04.jpg","title":"摄影 · 04"},
+      {"file":"photo-05.jpg","title":"摄影 · 05"},
+      {"file":"photo-06.jpg","title":"摄影 · 06"},
+      {"file":"photo-07.jpg","title":"摄影 · 07"},
+      {"file":"photo-08.jpg","title":"摄影 · 08"},
+      {"file":"photo-09.jpg","title":"摄影 · 09"},
+      {"file":"photo-10.jpg","title":"摄影 · 10"},
+      {"file":"photo-11.jpg","title":"摄影 · 11"},
+      {"file":"photo-12.jpg","title":"摄影 · 12"},
+      {"file":"photo-13.jpg","title":"摄影 · 13"},
+      {"file":"photo-14.jpg","title":"摄影 · 14"},
+      {"file":"photo-15.jpg","title":"摄影 · 15"}
+    ]},
+  {"dir":"sichuan","name":"四川","date":"2026-10-19","desc":"山地、丘陵、平原、高原，一次把四种地貌看全。","photos":[
+      {"file":"2026-10-19-sichuan-2.jpg","title":"四川 · 01"},
+      {"file":"2026-10-19-sichuan-4.jpg","title":"四川 · 02"},
+      {"file":"2026-10-19-sichuan-26.jpg","title":"四川 · 03"},
+      {"file":"2026-10-19-sichuan-29.jpg","title":"四川 · 04"}
+    ]}
+  ]
+}
