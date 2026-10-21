@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>图片 · 吉吉喳喳</title>
+<meta name="description" content="时光相册：每一张照片都是一次美好的记忆">
+<meta name="theme-color" content="#fbfcfb">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23176653'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='Georgia,serif'%3E%E5%90%89%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#fbfcfb;
+  --surface:#ffffff;
+  --ink:#202a33;
+  --ink-soft:#4a5a66;
+  --muted:#7c8b96;
+  --line:#e8ecef;
+  --green:#176653;
+  --green-deep:#0f4c3d;
+  --green-tint:#eaf3ef;
+  --green-tint-2:#f5faf8;
+  --radius:16px;
+  --wrap:1180px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
+  --shadow:0 1px 2px rgba(18,32,40,.04),0 14px 30px -24px rgba(18,32,40,.4);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2{margin:0;font-weight:700;letter-spacing:-.02em}
+p{margin:0}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:6px}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 28px}
+[hidden]{display:none !important}
+
+.site-header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;height:64px;max-width:1240px;margin:0 auto;padding:0 28px;width:100%}
+.brand{display:flex;align-items:center;gap:11px}
+.mark{width:34px;height:34px;flex:0 0 34px;border-radius:10px;background:var(--green);color:#fff;font-size:17px;line-height:34px;text-align:center;font-weight:600}
+.brand-text{display:flex;flex-direction:column;line-height:1.15}
+.brand-text strong{font-size:14.5px;font-weight:700}
+.brand-text em{font-style:normal;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.nav{display:flex;align-items:center;gap:2px}
+.nav a{position:relative;padding:7px 11px;border-radius:8px;font-size:13.5px;color:var(--ink-soft);transition:color .16s ease,background .16s ease}
+.nav a:hover{color:var(--green)}
+.nav a.is-active{color:var(--green);font-weight:600}
+.nav a.is-active::after{content:"";position:absolute;left:11px;right:11px;bottom:1px;height:2px;border-radius:2px;background:var(--green)}
+
+main{padding:22px 0 56px}
+
+.hero{
+  position:relative;height:186px;border-radius:var(--radius);overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:24px 30px;color:#fff;box-shadow:var(--shadow);
+  background:linear-gradient(100deg,#12483c,#1d6d59);
+}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(100deg,rgba(10,28,24,.82) 0%,rgba(10,28,24,.55) 46%,rgba(10,28,24,.18) 100%);
+}
+.hero > *{position:relative;z-index:1}
+.hero .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.85;margin-bottom:8px}
+.hero h1{font-size:22px;letter-spacing:-.01em}
+.hero p{font-size:13px;opacity:.8;margin-top:6px}
+
+.albums{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.albums button{
+  font-size:13px;color:var(--ink-soft);padding:8px 15px;border-radius:10px;
+  border:1px solid var(--line);background:var(--surface);cursor:pointer;
+  transition:all .16s ease;
+}
+.albums button:hover{border-color:#cfe0d8;color:var(--green)}
+.albums button[aria-pressed="true"]{background:var(--green-tint);border-color:#bcd8ca;color:var(--green-deep);font-weight:600}
+.albums .n{display:inline-block;margin-left:5px;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.albums button[aria-pressed="true"] .n{color:var(--green-deep)}
+
+.album-title{text-align:center;font-size:20px;font-weight:700;margin:26px 0 6px;letter-spacing:.02em}
+.album-title span{font-size:12.5px;font-weight:400;color:var(--muted);margin-left:8px;letter-spacing:0}
+.album-desc{text-align:center;font-size:13px;color:var(--muted);margin-bottom:22px}
+
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media (max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.grid{grid-template-columns:1fr}}
+
+.card{
+  display:block;width:100%;padding:0;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--surface);overflow:hidden;cursor:zoom-in;text-align:left;
+  box-shadow:var(--shadow);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.card:hover{transform:translateY(-3px);border-color:#d9e6e0;box-shadow:0 2px 4px rgba(18,32,40,.05),0 22px 40px -26px rgba(18,32,40,.45)}
+.card .ph{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--green-tint-2)}
+.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.card:hover .ph img{transform:scale(1.04)}
+.card .txt{padding:12px 15px 15px}
+.card .txt h2{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:4px}
+.card .txt .date{font-size:12px;color:var(--muted)}
+
+.empty{
+  margin-top:26px;padding:44px 22px;text-align:center;border:1px dashed var(--line);
+  border-radius:var(--radius);background:var(--surface);color:var(--muted);font-size:14px;
+}
+.empty code{
+  font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:13px;
+  background:var(--green-tint);color:var(--green-deep);padding:1px 6px;border-radius:5px;
+}
+.empty a{color:var(--green);text-decoration:underline;text-underline-offset:3px}
+
+.site-footer{border-top:1px solid var(--line);margin-top:44px;background:var(--surface)}
+.footer-inner{padding:22px 0 26px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
+.footer-inner a:hover{color:var(--green)}
+
+.lightbox{
+  position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;padding:24px;
+  background:rgba(10,18,16,.93);
+}
+.lightbox img{max-width:min(1180px,92vw);max-height:74vh;width:auto;height:auto;border-radius:10px;box-shadow:0 24px 60px -24px rgba(0,0,0,.8)}
+.lb-cap{color:#e7efec;font-size:13.5px;text-align:center}
+.lb-bar{display:flex;align-items:center;gap:12px;color:#c9d6d0;font-size:12.5px}
+.lb-bar button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);color:#fff;font-size:15px;cursor:pointer}
+.lb-bar button:hover{background:rgba(255,255,255,.18)}
+.lb-close{position:absolute;top:16px;right:18px;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);color:#fff;font-size:19px;line-height:1;cursor:pointer}
+.lb-close:hover{background:rgba(255,255,255,.18)}
+.lb-count{font-variant-numeric:tabular-nums;opacity:.85}
+
+@media (max-width:900px){
+  .wrap,.header-inner{padding:0 18px}
+  .header-inner{height:auto;flex-wrap:wrap;padding-top:9px;padding-bottom:9px}
+  .nav{max-width:100%;overflow-x:auto}
+  .nav a{white-space:nowrap}
+  .hero{height:150px;padding:18px 20px}
+  .hero h1{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  .card,.card .ph img{transition:none}
+  .card:hover{transform:none}
+  .card:hover .ph img{transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="mark" aria-hidden="true">吉</span>
+      <span class="brand-text"><strong>吉吉喳喳</strong><em>Personal Blog</em></span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html">首页</a>
+      <a href="archive.html">归档</a>
+      <a href="tags.html">标签</a>
+      <a href="photos.html" class="is-active">图片</a>
+      <a href="https://github.com/Jijizhazha-dot" target="_blank" rel="noopener noreferrer">代码</a>
+      <a href="index.html#about">关于</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" id="hero">
+    <p class="kicker">Gallery</p>
+    <h1>时光相册</h1>
+    <p>每一张照片都是一次美好的记忆</p>
+  </section>
+
+  <div class="albums" id="albums" role="group" aria-label="相册" hidden></div>
+  <h2 class="album-title" id="album-title" hidden></h2>
+  <p class="album-desc" id="album-desc" hidden></p>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" hidden>
+    还没有相册。<br>
+    在仓库里新建 <code>gallery/相册名/</code>，把照片放进去，再运行一次上传脚本，这里就会自动出现。
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <span>© <span id="year">2026</span> 吉吉喳喳 · 图片版权归原作者所有</span>
+    <span><a href="archive.html">返回归档</a></span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const albumsEl = document.getElementById("albums");
+  const gridEl = document.getElementById("grid");
+  const titleEl = document.getElementById("album-title");
+  const descEl = document.getElementById("album-desc");
+  const emptyEl = document.getElementById("empty");
+  const heroEl = document.getElementById("hero");
+  const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  let albums = [];
+  let active = 0;
+  let shown = [];
+
+  /* ---------- 读取相册清单（由上传脚本根据 gallery/ 目录生成） ---------- */
+  async function loadAlbums() {
+    const res = await fetch("gallery/index.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("gallery/index.json " + res.status);
+    const data = await res.json();
+    return Array.isArray(data) ? data : (data && data.albums) || [];
+  }
+
+  function photoPath(album, file) {
+    return "gallery/" + album.dir + "/" + file;
+  }
+
+  function renderAlbums() {
+    albumsEl.hidden = false;
+    albumsEl.innerHTML = albums.map((album, i) => (
+      '<button type="button" data-index="' + i + '" aria-pressed="' + (i === active ? "true" : "false") + '">' +
+      esc(album.name) + ' <span class="n">' + album.photos.length + "</span></button>"
+    )).join("");
+  }
+
+  function renderAlbum() {
+    const album = albums[active];
+    if (!album) return;
+
+    titleEl.hidden = false;
+    titleEl.innerHTML = esc(album.name) + '<span>' + album.photos.length + " 张" +
+      (album.date ? " · " + esc(album.date) : "") + "</span>";
+
+    if (album.desc) {
+      descEl.hidden = false;
+      descEl.textContent = album.desc;
+    } else {
+      descEl.hidden = true;
+    }
+
+    shown = album.photos.map((photo) => ({
+      src: photoPath(album, photo.file),
+      title: photo.title || photo.file.replace(/\.[^.]+$/, ""),
+      album: album.name
+    }));
+
+    gridEl.innerHTML = shown.map((item, i) => (
+      '<button type="button" class="card" data-index="' + i + '" aria-label="查看大图：' + esc(item.title) + '">' +
+        '<span class="ph"><img src="' + esc(item.src) + '" alt="' + esc(item.title) + '" loading="lazy" decoding="async"></span>' +
+        '<span class="txt"><h2>' + esc(item.title) + "</h2>" +
+        '<span class="date">Date: ' + esc(album.date || "—") + "</span></span>" +
+      "</button>"
+    )).join("");
+
+    // 首图做页面横幅底图
+    const first = shown[0];
+    if (first) {
+      const img = document.createElement("img");
+      img.src = first.src;
+      img.alt = "";
+      img.setAttribute("aria-hidden", "true");
+      heroEl.querySelector("img")?.remove();
+      heroEl.appendChild(img);
+    }
+  }
+
+  albumsEl.addEventListener("click", (event) => {
+    const btn = event.target.closest("button[data-index]");
+    if (!btn) return;
+    active = Number(btn.dataset.index);
+    renderAlbums();
+    renderAlbum();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  /* ---------- 灯箱 ---------- */
+  let lightbox = null;
+  let lbIndex = 0;
+
+  function buildLightbox() {
+    lightbox = document.createElement("div");
+    lightbox.className = "lightbox";
+    lightbox.setAttribute("role", "dialog");
+    lightbox.setAttribute("aria-modal", "true");
+    lightbox.setAttribute("aria-label", "照片预览");
+    lightbox.innerHTML =
+      '<button type="button" class="lb-close" aria-label="关闭">×</button>' +
+      '<img alt="">' +
+      '<p class="lb-cap"></p>' +
+      '<div class="lb-bar"><button type="button" class="lb-prev" aria-label="上一张">←</button>' +
+      '<span class="lb-count"></span>' +
+      '<button type="button" class="lb-next" aria-label="下一张">→</button></div>';
+    document.body.appendChild(lightbox);
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox || event.target.closest(".lb-close")) closeLightbox();
+      if (event.target.closest(".lb-prev")) step(-1);
+      if (event.target.closest(".lb-next")) step(1);
+    });
+  }
+
+  function openLightbox(index) {
+    if (!lightbox) buildLightbox();
+    lbIndex = index;
+    updateLightbox();
+    lightbox.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.hidden = true;
+    document.body.style.overflow = "";
+  }
+
+  function updateLightbox() {
+    const item = shown[lbIndex];
+    if (!item) return;
+    const img = lightbox.querySelector("img");
+    img.src = item.src;
+    img.alt = item.title;
+    lightbox.querySelector(".lb-cap").textContent = item.title + " · " + item.album;
+    lightbox.querySelector(".lb-count").textContent = (lbIndex + 1) + " / " + shown.length;
+  }
+
+  function step(delta) {
+    if (!shown.length) return;
+    lbIndex = (lbIndex + delta + shown.length) % shown.length;
+    updateLightbox();
+  }
+
+  gridEl.addEventListener("click", (event) => {
+    const card = event.target.closest(".card");
+    if (card) openLightbox(Number(card.dataset.index));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!lightbox || lightbox.hidden) return;
+    if (event.key === "Escape") closeLightbox();
+    if (event.key === "ArrowLeft") step(-1);
+    if (event.key === "ArrowRight") step(1);
+  });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  loadAlbums().then((list) => {
+    albums = list.filter((album) => album && album.photos && album.photos.length);
+    if (!albums.length) {
+      emptyEl.hidden = false;
+      return;
+    }
+    renderAlbums();
+    renderAlbum();
+  }).catch(() => {
+    emptyEl.hidden = false;
+  });
+})();
+</script>
+</body>
+</html>
