@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>归档 · 吉吉喳喳</title>
+<meta name="description" content="全部文章归档，按发布时间倒序">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23176653'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='Georgia,serif'%3E%E5%90%89%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --ink:#202a33;
+  --ink-soft:#4a5a66;
+  --muted:#7c8b96;
+  --line:#e8ecef;
+  --line-soft:#f1f4f6;
+  --green:#176653;
+  --green-deep:#0f4c3d;
+  --green-tint:#eaf3ef;
+  --green-tint-2:#f5faf8;
+  --radius:14px;
+  --wrap:1120px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
+  --shadow:0 1px 2px rgba(18,32,40,.04),0 12px 28px -22px rgba(18,32,40,.35);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:6px}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 32px}
+[hidden]{display:none !important}
+
+.site-header{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--line)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;height:72px;max-width:1200px;margin:0 auto;padding:0 32px;width:100%}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:38px;height:38px;flex:0 0 38px;border-radius:11px;background:var(--green);color:#fff;font-size:19px;line-height:38px;text-align:center;font-weight:600}
+.brand-text{display:flex;flex-direction:column;line-height:1.15}
+.brand-text strong{font-size:16px;font-weight:700}
+.brand-text em{font-style:normal;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.nav{display:flex;align-items:center;gap:4px}
+.nav a{
+  position:relative;padding:8px 12px;border-radius:8px;font-size:14px;color:var(--ink-soft);
+  transition:color .16s ease,background .16s ease;
+}
+.nav a:hover{color:var(--green)}
+.nav a.is-active{color:var(--green);font-weight:600}
+.nav a.is-active::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;border-radius:2px;background:var(--green)}
+.menu-btn{display:none;border:1px solid var(--line);border-radius:9px;background:var(--bg);height:36px;padding:0 12px;font-size:13px;color:var(--ink-soft);cursor:pointer}
+
+main{padding:44px 0 64px}
+.page-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid var(--line);
+}
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.eyebrow span{color:var(--green)}
+.page-head h1{font-size:26px}
+.page-head .hint{font-size:12.5px;color:var(--muted)}
+.sort{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.sort .count{margin-right:2px;font-variant-numeric:tabular-nums}
+.sort button{
+  padding:6px 13px;border-radius:999px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-soft);font-size:13px;cursor:pointer;
+  transition:all .16s ease;
+}
+.sort button:hover{border-color:#cfe0d8;color:var(--green)}
+.sort button[aria-pressed="true"]{background:var(--green-tint);border-color:#bcd8ca;color:var(--green-deep);font-weight:600}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.filters a{
+  font-size:12.5px;color:var(--ink-soft);padding:6px 13px;border-radius:999px;
+  border:1px solid var(--line);background:var(--surface);transition:all .16s ease;
+}
+.filters a:hover{border-color:#cfe0d8;color:var(--green)}
+.filters a.is-on{background:var(--green-tint);border-color:#bcd8ca;color:var(--green-deep);font-weight:600}
+.filters .n{
+  display:inline-block;margin-left:3px;padding:1px 6px;border-radius:999px;
+  font-size:11px;color:var(--muted);background:var(--green-tint-2);
+  font-variant-numeric:tabular-nums;
+}
+.filters a.is-on .n{background:#fff;color:var(--green-deep)}
+
+.list-box{border:1px solid var(--line);background:var(--surface);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.row{
+  display:flex;align-items:baseline;gap:10px;padding:14px 18px;
+  border-bottom:1px solid var(--line-soft);transition:background .16s ease;
+}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--green-tint-2)}
+.row .tri{flex:0 0 auto;font-size:10px;line-height:1.9;color:var(--green);transform:translateY(-1px)}
+.row .title{flex:1 1 auto;min-width:0;font-size:15.5px;color:var(--ink-soft);line-height:1.6}
+.row:hover .title{color:var(--green-deep)}
+.row .tagline{flex:0 0 auto;font-size:11.5px;color:var(--green);background:var(--green-tint);padding:2px 8px;border-radius:6px}
+.row .date{flex:0 0 auto;font-size:14px;color:#8b959b;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+.pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;margin-top:18px;font-size:13.5px;color:var(--muted)}
+.pager a,.pager span.link{color:var(--ink-soft);padding:2px 4px;border-radius:5px;transition:color .16s ease,background .16s ease}
+.pager a:hover{color:var(--green);background:var(--green-tint)}
+.pager .disabled{color:#b9c0c4;pointer-events:none}
+.pager .current{color:var(--green-deep);font-weight:600}
+
+.state{padding:44px 20px;text-align:center;font-size:14px;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
+.state a{color:var(--green);text-decoration:underline;text-underline-offset:3px}
+
+.site-footer{border-top:1px solid var(--line);margin-top:48px}
+.footer-inner{padding:24px 0 28px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
+.footer-inner a:hover{color:var(--green)}
+
+@media (max-width:900px){
+  .wrap,.header-inner{padding:0 22px}
+  .header-inner{height:auto;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+  .nav{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .nav a{white-space:nowrap}
+  .row{flex-wrap:wrap}
+  .row .title{flex:1 1 100%;order:2}
+  .row .tri{order:1}
+  .row .tagline{order:3}
+  .row .date{order:4;margin-left:auto}
+}
+@media (max-width:560px){
+  .wrap,.header-inner{padding:0 18px}
+  main{padding-top:28px}
+  .row{padding:12px 14px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="mark" aria-hidden="true">吉</span>
+      <span class="brand-text"><strong>吉吉喳喳</strong><em>Personal Blog</em></span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="index.html">首页</a>
+      <a href="archive.html" class="is-active">归档</a>
+      <a href="tags.html">标签</a>
+      <a href="photos.html">图片</a>
+      <a href="https://github.com/Jijizhazha-dot" target="_blank" rel="noopener noreferrer">代码</a>
+      <a href="index.html#about">关于</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Archive <span>——</span></p>
+      <h1 id="page-title">全部文章</h1>
+    </div>
+    <div class="sort" role="group" aria-label="排序方式">
+      <span class="count" id="count"></span>
+      <button type="button" data-sort="desc" aria-pressed="true">倒序</button>
+      <button type="button" data-sort="asc" aria-pressed="false">正序</button>
+    </div>
+  </div>
+
+  <div id="list"></div>
+  <div class="pager" id="pager"></div>
+  <p class="state" id="state">正在读取文章…</p>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <span>© <span id="year">2026</span> 吉吉喳喳</span>
+    <span><a href="index.html">返回首页</a></span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const PER_PAGE = 20;
+  const $ = (sel) => document.querySelector(sel);
+  const listEl = $("#list");
+  const pagerEl = $("#pager");
+  const stateEl = $("#state");
+
+  const CACHE_TTL = 10 * 60 * 1000;
+  const cacheKey = () => "dsh-archive:" + location.host + location.pathname;
+
+  function readCache() {
+    try {
+      const raw = localStorage.getItem(cacheKey());
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      return Array.isArray(data.posts) ? data : null;
+    } catch (error) { return null; }
+  }
+
+  function writeCache(posts) {
+    try { localStorage.setItem(cacheKey(), JSON.stringify({ ts: Date.now(), posts: posts })); } catch (error) { }
+  }
+
+  function detectRepo() {
+    const m = /^([^.]+)\.github\.io$/i.exec(location.hostname || "");
+    if (!m) return null;
+    const segs = location.pathname.split("/").filter(Boolean);
+    const first = segs[0] && !/\.html?$/i.test(segs[0]) ? segs[0] : "";
+    return { owner: m[1], repo: first || m[1] + ".github.io" };
+  }
+
+  const isPostFile = (name) => /\.md$/i.test(name) && name.charAt(0) !== "_";
+
+  function parseMeta(text) {
+    const src = String(text).replace(/\r\n?/g, "\n");
+    const m = /^---[ \t]*\n([\s\S]*?)\n---[ \t]*\n?/.exec(src);
+    if (!m) return {};
+    const meta = {};
+    m[1].split("\n").forEach((line) => {
+      const kv = /^([A-Za-z0-9_-]+)\s*:\s*(.*)$/.exec(line);
+      if (!kv) return;
+      let value = kv[2].trim();
+      if (/^(".*"|'.*')$/.test(value)) value = value.slice(1, -1);
+      meta[kv[1]] = value;
+    });
+    return meta;
+  }
+
+  function normalise(entry) {
+    if (typeof entry === "string") {
+      const slug = entry.replace(/\.md$/i, "");
+      return { file: entry, slug: slug, title: slug, date: "", time: "", tag: "未分类" };
+    }
+    if (!entry || !entry.file) return null;
+    return {
+      file: entry.file,
+      slug: String(entry.file).replace(/\.md$/i, ""),
+      title: entry.title || String(entry.file).replace(/\.md$/i, ""),
+      date: entry.date || "",
+      time: /^\d{1,2}:\d{2}/.test(String(entry.time || "")) ? String(entry.time).slice(0, 5) : "",
+      tag: entry.tag || "未分类",
+      category: entry.category || ""
+    };
+  }
+
+  async function fromManifest() {
+    const res = await fetch("posts/index.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error("index.json " + res.status);
+    const data = await res.json();
+    const list = Array.isArray(data) ? data : (data && data.posts) || [];
+    const posts = list.map(normalise).filter(Boolean);
+    return posts.length ? posts : null;
+  }
+
+  async function fromGitHub(target) {
+    const res = await fetch("https://api.github.com/repos/" + target.owner + "/" + target.repo + "/contents/posts",
+      { headers: { Accept: "application/vnd.github+json" }, cache: "no-cache" });
+    if (!res.ok) throw new Error("GitHub API " + res.status);
+    const items = await res.json();
+    return (Array.isArray(items) ? items : [])
+      .filter((item) => item && item.type === "file" && isPostFile(item.name))
+      .map((item) => item.name);
+  }
+
+  async function fromJsDelivr(target) {
+    const url = "https://data.jsdelivr.com/v1/packages/gh/" + target.owner + "/" + target.repo + "@main?structure=flat";
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) throw new Error("jsDelivr " + res.status);
+    const data = await res.json();
+    return (Array.isArray(data.files) ? data.files : [])
+      .map((file) => String(file && file.name ? file.name : ""))
+      .filter((name) => name.indexOf("/posts/") === 0)
+      .map((name) => name.slice("/posts/".length))
+      .filter(isPostFile);
+  }
+
+  async function loadOne(name, target) {
+    const slug = name.replace(/\.md$/i, "");
+    const urls = [];
+    if (target) urls.push("https://raw.githubusercontent.com/" + target.owner + "/" + target.repo + "/main/posts/" + encodeURIComponent(name));
+    urls.push("posts/" + encodeURIComponent(name));
+    for (const url of urls) {
+      try {
+        const res = await fetch(url, { cache: "no-cache" });
+        if (!res.ok) continue;
+        const meta = parseMeta(await res.text());
+        const fromName = /^(\d{4}-\d{2}-\d{2})/.exec(slug);
+        const rawTime = String(meta.time || "").trim();
+        return {
+          file: name, slug: slug,
+          title: meta.title || slug,
+          date: /^\d{4}-\d{2}-\d{2}$/.test(meta.date || "") ? meta.date : (fromName ? fromName[1] : ""),
+          time: /^\d{1,2}:\d{2}/.test(rawTime) ? rawTime.slice(0, 5) : "",
+          tag: meta.tag || "未分类",
+          category: meta.category || ""
+        };
+      } catch (error) { /* 换下一个 */ }
+    }
+    return { file: name, slug: slug, title: slug, date: "", time: "", tag: "未分类", category: "" };
+  }
+
+  /* 排序键：date + time 拼接后倒序，发表越晚越靠前 */
+  function sortByTime(list) {
+    return [...list].sort((a, b) => {
+      const sa = String(a.date || "") + " " + String(a.time || "");
+      const sb = String(b.date || "") + " " + String(b.time || "");
+      return sb.localeCompare(sa);
+    });
+  }
+
+  async function loadPosts() {
+    const cached = readCache();
+    if (cached && cached.posts.length && Date.now() - cached.ts < CACHE_TTL) return cached.posts;
+
+    try {
+      const posts = await fromManifest();
+      if (posts) {
+        const sorted = sortByTime(posts);
+        writeCache(sorted);
+        return sorted;
+      }
+    } catch (error) { /* 继续 */ }
+
+    const target = detectRepo();
+    const listers = [];
+    if (target) listers.push(() => fromGitHub(target), () => fromJsDelivr(target));
+
+    for (const lister of listers) {
+      let names = [];
+      try { names = await lister(); } catch (error) { continue; }
+      if (!names.length) continue;
+      const posts = sortByTime(await Promise.all(names.map((name) => loadOne(name, target))));
+      writeCache(posts);
+      return posts;
+    }
+    return cached ? cached.posts : [];
+  }
+
+  /* ---------- 渲染 ---------- */
+  let all = [];
+  let sortDir = "desc";   // 默认倒序：发表时间近的靠前
+
+  function sortPosts(list) {
+    const sorted = sortByTime(list);
+    return sortDir === "asc" ? sorted.reverse() : sorted;
+  }
+
+  function render() {
+    const posts = sortPosts(all);
+    const pages = Math.max(1, Math.ceil(posts.length / PER_PAGE));
+    const m = /[?&]page=(\d+)/.exec(location.search);
+    const page = Math.min(Math.max(m ? parseInt(m[1], 10) : 1, 1), pages);
+    const slice = posts.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+    $("#page-title").textContent = "全部文章";
+    $("#count").textContent = posts.length ? "共 " + posts.length + " 篇" : "";
+
+    if (!posts.length) {
+      listEl.innerHTML = '<p class="state">这里还没有文章。回<a href="index.html">首页</a>看看。</p>';
+      pagerEl.innerHTML = "";
+      return;
+    }
+
+    listEl.innerHTML = '<div class="list-box">' + slice.map((post) => (
+      '<a class="row" href="article.html?p=' + encodeURIComponent(post.slug) + '">' +
+        '<span class="tri" aria-hidden="true">▶</span>' +
+        '<span class="title">' + escapeHtml(post.title) + "</span>" +
+        '<span class="date">(' + escapeHtml(fmtStamp(post)) + ")</span>" +
+      "</a>"
+    )).join("") + "</div>";
+
+    const link = (label, target) => {
+      const disabled = target < 1 || target > pages || target === page;
+      if (disabled) return '<span class="link disabled">' + label + "</span>";
+      const q = new URLSearchParams(location.search);
+      q.set("page", String(target));
+      return '<a href="archive.html?' + q.toString() + '">' + label + "</a>";
+    };
+    pagerEl.innerHTML =
+      '<span class="count">共 ' + posts.length + " 条，分 " + pages + " 页，当前第 " +
+      '<span class="current">' + page + "</span> 页</span>" +
+      link("最前页", 1) + link("上一页", page - 1) + link("下一页", page + 1) + link("最后页", pages);
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
+  /* 发表时间显示：2026.10.19 18:30；没有 time 时只显示日期 */
+  function fmtStamp(post) {
+    const d = String(post.date || "");
+    const t = String(post.time || "");
+    if (!d) return "—";
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d);
+    const day = m ? m[1] + "." + m[2] + "." + m[3] : d;
+    return t ? day + " " + t : day;
+  }
+
+  $("#year").textContent = new Date().getFullYear();
+
+  /* 正序 / 倒序切换：点击后重置到第 1 页 */
+  document.querySelectorAll(".sort button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (btn.dataset.sort === sortDir) return;
+      sortDir = btn.dataset.sort;
+      document.querySelectorAll(".sort button").forEach((other) => {
+        other.setAttribute("aria-pressed", String(other.dataset.sort === sortDir));
+      });
+      const q = new URLSearchParams(location.search);
+      q.delete("page");
+      const qs = q.toString();
+      history.replaceState(null, "", qs ? "?" + qs : location.pathname);
+      render();
+    });
+  });
+
+  loadPosts().then((posts) => {
+    all = posts || [];
+    stateEl.hidden = true;
+    render();
+  }).catch(() => {
+    stateEl.innerHTML = '读取文章失败。回<a href="index.html">首页</a>重试。';
+  });
+})();
+</script>
+</body>
+</html>
