@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>吉吉喳喳 · 个人博客</title>
+<meta name="description" content="记录工程实践、工具探索与阅读思考，也收藏生活中的灵感与发现。">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="website">
+<meta property="og:title" content="吉吉喳喳 · 个人博客">
+<meta property="og:description" content="记录工程实践、工具探索与阅读思考，也收藏生活中的灵感与发现。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23176653'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='Georgia,serif'%3E%E5%90%89%3C/text%3E%3C/svg%3E">
+<!--
+  ============================================================
+  文件结构（都要上传到仓库根目录）
+    index.html     首页：精选 + 最近更新 + 关于侧栏
+    archive.html   归档页：公告式列表 + 分页
+    tags.html      标签页：标签云，按热度/首字母排序
+    article.html   正文页：Markdown 渲染 + 代码复制 + 上下篇/相关
+    posts/         文章目录，每篇一个 .md
+    images/        文章配图，md 里用 images/xxx.png 相对引用
+  部署：Settings → Pages → Deploy from a branch → main / (root)
+  ============================================================
+  加文章：往 posts/ 里传一个 .md（复制 posts/_模板.md 改一改）
+  front matter 支持 title / date / tag / minutes / featured / cover / category
+  配色与间距：只改 :root 里的 CSS 变量
+  ============================================================
+-->
+<style>
+/* ============================================================
+   1. 设计变量
+   ============================================================ */
+:root{
+  --bg:#ffffff;
+  --surface:#ffffff;
+  --ink:#202a33;
+  --ink-soft:#4a5a66;
+  --muted:#7c8b96;
+  --line:#e8ecef;
+  --line-soft:#f1f4f6;
+  --green:#176653;
+  --green-deep:#0f4c3d;
+  --green-tint:#eaf3ef;
+  --green-tint-2:#f5faf8;
+  --sun:#f0a050;
+  --radius:14px;
+  --radius-sm:10px;
+  --wrap:1200px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  --shadow:0 1px 2px rgba(18,32,40,.04),0 12px 28px -22px rgba(18,32,40,.35);
+  --shadow-hover:0 2px 4px rgba(18,32,40,.05),0 18px 34px -24px rgba(18,32,40,.42);
+}
+
+/* ============================================================
+   2. 基础
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.02em;line-height:1.3}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+button{font-family:inherit}
+::selection{background:#cfe6da;color:var(--green-deep)}
+:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:6px}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 32px}
+[hidden]{display:none !important}
+
+/* ============================================================
+   3. 顶栏
+   ============================================================ */
+.site-header{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--line)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;height:72px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.mark{
+  width:38px;height:38px;flex:0 0 38px;border-radius:11px;
+  background:var(--green);color:#fff;font-size:19px;line-height:38px;text-align:center;font-weight:600;
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.brand-text strong{font-size:16px;font-weight:700;letter-spacing:.01em}
+.brand-text em{
+  font-style:normal;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);margin-top:3px;
+}
+
+.nav{display:flex;align-items:center;gap:4px}
+.nav a{
+  position:relative;padding:8px 12px;border-radius:8px;
+  font-size:14px;color:var(--ink-soft);transition:color .16s ease,background .16s ease;
+}
+.nav a:hover{color:var(--green)}
+.nav a.is-active{color:var(--green);font-weight:600}
+.nav a.is-active::after{
+  content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;border-radius:2px;background:var(--green);
+}
+.nav-sep{width:1px;height:18px;background:var(--line);margin:0 10px 0 6px}
+
+.search{display:flex;align-items:center;gap:2px;margin-left:6px}
+.search input{
+  width:0;min-width:0;padding:4px 0;border:0;border-bottom:1px solid transparent;background:transparent;
+  font-family:inherit;font-size:13.5px;color:var(--ink);opacity:0;visibility:hidden;
+  transition:width .24s ease,opacity .2s ease,padding .24s ease,border-color .24s ease;
+}
+.search input::placeholder{color:#9aa6ab}
+.search input:focus{outline:none}
+.search.is-open input{width:190px;padding:4px 6px 4px 2px;border-bottom-color:var(--line);opacity:1;visibility:visible}
+.search button{
+  display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;
+  border:0;border-radius:9px;background:transparent;color:var(--ink-soft);cursor:pointer;
+  transition:color .16s ease,background .16s ease;
+}
+.search button:hover{color:var(--green);background:var(--green-tint-2)}
+.search svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+
+.menu-btn{
+  display:none;align-items:center;gap:6px;height:36px;padding:0 12px;
+  border:1px solid var(--line);border-radius:9px;background:var(--bg);
+  color:var(--ink-soft);font-size:13px;cursor:pointer;
+}
+.menu-btn:hover{color:var(--green);border-color:#cfe0d8}
+
+/* ============================================================
+   4. Hero
+   ============================================================ */
+.hero{
+  display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
+  gap:56px;align-items:center;padding-top:64px;padding-bottom:56px;
+}
+.kicker{
+  font-size:11.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:18px;
+}
+.kicker span{color:var(--green)}
+.hero h1{font-size:clamp(32px,3.4vw,46px);line-height:1.22;letter-spacing:-.03em;margin-bottom:20px}
+.hero h1 .accent{color:var(--green)}
+.lede{color:var(--ink-soft);font-size:16.5px;line-height:1.95;max-width:34em}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.chips li{
+  font-size:12.5px;color:var(--ink-soft);padding:5px 12px;border-radius:999px;
+  background:var(--green-tint-2);border:1px solid transparent;transition:all .16s ease;
+}
+.chips li:hover{border-color:#cfe0d8;color:var(--green-deep)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:11px;
+  font-size:14px;font-weight:500;border:1px solid transparent;cursor:pointer;
+  transition:transform .16s ease,background .16s ease,border-color .16s ease,color .16s ease,box-shadow .16s ease;
+}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--green);color:#fff;box-shadow:0 8px 20px -12px rgba(23,102,83,.85)}
+.btn-primary:hover{background:var(--green-deep);transform:translateY(-1px)}
+.btn-ghost{background:var(--bg);border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:#cfe0d8;color:var(--green);transform:translateY(-1px)}
+
+.hero-art{
+  position:relative;
+  margin:0;border-radius:18px;overflow:hidden;border:1px solid var(--line);
+  background:linear-gradient(180deg,#f7fbf9 0%,#eef6f2 100%);
+}
+.hero-art svg{width:100%;height:auto}
+.hero-quote{
+  position:absolute;left:18px;bottom:16px;right:18px;
+  font-size:12.5px;line-height:1.6;color:var(--green-deep);
+  background:rgba(255,255,255,.82);border:1px solid rgba(23,102,83,.14);
+  border-radius:10px;padding:8px 12px;backdrop-filter:blur(4px);
+}
+
+/* ============================================================
+   5. 内容区
+   ============================================================ */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:48px;padding-bottom:8px}
+.block{padding-top:40px}
+.block:first-child{padding-top:8px}
+.block-head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding-bottom:14px;margin-bottom:20px;border-bottom:1px solid var(--line);
+}
+.block-head h2{display:flex;align-items:center;gap:9px;font-size:17px;letter-spacing:-.01em}
+.block-head h2 .ico{color:var(--green);display:inline-grid;place-items:center}
+.block-head h2 .en{
+  font-size:10.5px;font-weight:600;letter-spacing:.16em;color:var(--muted);
+  text-transform:uppercase;transform:translateY(1px);
+}
+.block-head a{font-size:13px;color:var(--muted);transition:color .16s ease}
+.block-head a:hover{color:var(--green)}
+
+.featured-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.fcard{
+  display:flex;flex-direction:column;gap:12px;padding:16px;
+  border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+  box-shadow:var(--shadow);
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.fcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:#d9e6e0}
+.fcard .cover{
+  width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius-sm);
+  background:var(--green-tint-2);
+}
+.fcard .body{display:flex;flex-direction:column;gap:8px;flex:1}
+.fcard h3{font-size:17px;line-height:1.5}
+.fcard h3 a:hover{color:var(--green)}
+.fcard .excerpt{
+  font-size:13.5px;line-height:1.8;color:var(--muted);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:auto;padding-top:6px}
+.meta .dot{opacity:.45}
+.meta svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.7;display:inline-block;vertical-align:-2px;margin-right:3px}
+
+.litem .thumb{
+  width:64px;height:48px;flex:0 0 64px;border-radius:8px;object-fit:cover;
+  border:1px solid var(--line);background:var(--green-tint-2);
+}
+.litem .body{min-width:0;display:flex;flex-direction:column;gap:5px;justify-content:center}
+.litem h3{
+  font-size:14.5px;font-weight:600;line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.litem:hover h3{color:var(--green-deep)}
+.litem .meta{padding-top:0;font-size:11.5px}
+
+.empty{
+  padding:36px 20px;text-align:center;font-size:14px;color:var(--muted);
+  border:1px dashed var(--line);border-radius:var(--radius);margin-top:16px;
+}
+
+.col-side{display:flex;flex-direction:column;gap:20px;padding-top:8px}
+.card{
+  border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+  box-shadow:var(--shadow);padding:18px 18px 14px;
+}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.card h3{font-size:14.5px;display:flex;align-items:center;gap:8px}
+.card h3 .ico{color:var(--green);display:inline-grid;place-items:center}
+.card-head a{font-size:12px;color:var(--muted)}
+.card-head a:hover{color:var(--green)}
+.card p{font-size:13.5px;line-height:1.85;color:var(--muted)}
+.card .more{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:13px;color:var(--green);font-weight:500}
+.card .more:hover{color:var(--green-deep)}
+
+/* 侧栏最近更新列表（通知公告式） */
+.recent-list{list-style:none;margin:0;padding:0}
+.recent-list li{
+  display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  padding:10px 0;border-bottom:1px solid var(--line);
+}
+.recent-list li:first-child{padding-top:2px}
+.recent-list li:last-child{border-bottom:0;padding-bottom:0}
+.recent-card{padding-bottom:10px}
+.recent-list .t{
+  flex:1;min-width:0;font-size:13.5px;line-height:1.55;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .16s ease;
+}
+.recent-list .t:hover{color:var(--green)}
+.recent-list .d{
+  flex:none;font-size:11.5px;color:var(--muted);letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+
+/* ============================================================
+   6. 关于
+   ============================================================ */
+.about-block{
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:48px;
+  padding-top:56px;padding-bottom:64px;border-top:1px solid var(--line);
+  margin-top:56px;scroll-margin-top:90px;
+}
+.about-block h2{font-size:22px;margin-bottom:16px}
+.about-block p{color:var(--ink-soft);font-size:15px;line-height:1.95;max-width:52ch}
+.about-block p + p{margin-top:12px}
+.about-block code{
+  font-family:"SFMono-Regular",Consolas,Menlo,monospace;font-size:13px;
+  background:var(--green-tint);color:var(--green-deep);padding:1px 5px;border-radius:5px;
+}
+.facts{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);padding:6px 20px}
+.facts dl{margin:0}
+.fact{display:grid;grid-template-columns:70px 1fr;gap:14px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.fact:last-child{border-bottom:0}
+.fact dt{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.fact dd{margin:0;font-size:14px}
+.fact dd a{color:var(--green);border-bottom:1px solid #c3ddd1}
+.fact dd a:hover{color:var(--green-deep);border-color:var(--green-deep)}
+
+/* ============================================================
+   7. 页脚
+   ============================================================ */
+.site-footer{border-top:1px solid var(--line);background:var(--bg)}
+.footer-inner{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;
+  padding-top:26px;padding-bottom:30px;font-size:12.5px;color:var(--muted);
+}
+.footer-links{display:flex;flex-wrap:wrap;gap:16px}
+.footer-links a:hover{color:var(--green)}
+.footer-sep{margin:0 8px;opacity:.4}
+.fcard .more{
+  display:inline-flex;align-items:center;gap:4px;margin-top:2px;
+  font-size:12.5px;color:var(--green);font-weight:500;transition:gap .16s ease,color .16s ease;
+}
+.fcard:hover .more{gap:8px;color:var(--green-deep)}
+.fcard .fcover{display:block}
+
+/* ============================================================
+   8. 动效与响应式
+   ============================================================ */
+.reveal{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
+.reveal.is-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .fcard:hover{transform:none}
+}
+
+@media (max-width:1080px){
+  .layout{grid-template-columns:minmax(0,1fr) 280px;gap:32px}
+}
+@media (max-width:900px){
+  .wrap{padding:0 22px}
+  .hero{grid-template-columns:1fr;gap:32px;padding-top:40px;padding-bottom:36px}
+  .hero-art{max-width:520px}
+  .layout{grid-template-columns:1fr;gap:8px}
+  .col-side{order:2;padding-top:8px}
+  .featured-grid{grid-template-columns:1fr}
+  .about-block{grid-template-columns:1fr;gap:28px;padding-top:40px;padding-bottom:48px;margin-top:40px}
+  .menu-btn{display:inline-flex}
+  .nav{
+    position:absolute;left:0;right:0;top:72px;
+    flex-direction:column;align-items:stretch;gap:2px;
+    background:var(--bg);border-bottom:1px solid var(--line);
+    padding:10px 22px 16px;box-shadow:var(--shadow);display:none;
+  }
+  .nav.is-open{display:flex}
+  .nav a{padding:11px 10px;border-radius:9px;font-size:15px}
+  .nav a.is-active::after{display:none}
+  .nav a.is-active{background:var(--green-tint-2)}
+  .nav-sep{display:none}
+  .search{margin:6px 0 0;padding-top:10px;border-top:1px solid var(--line-soft)}
+  .search.is-open input{width:100%}
+  .search button{order:2}
+  .search input{order:1}
+}
+@media (max-width:560px){
+  .wrap{padding:0 18px}
+  .header-inner{height:64px}
+  .nav{top:64px}
+  .hero h1{font-size:30px}
+  .litem .thumb{display:none}
+  .litem{padding:12px 6px}
+  .fcard{padding:14px}
+  .footer-inner{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html">
+      <span class="mark" aria-hidden="true">吉</span>
+      <span class="brand-text">
+        <strong>吉吉喳喳</strong>
+        <em>Personal Blog</em>
+      </span>
+    </a>
+
+    <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="nav">菜单</button>
+
+    <nav class="nav" id="nav" aria-label="主导航">
+      <a href="index.html" class="is-active">首页</a>
+      <a href="archive.html">归档</a>
+      <a href="tags.html">标签</a>
+      <a href="photos.html">图片</a>
+      <a href="https://github.com/Jijizhazha-dot" data-github target="_blank" rel="noopener noreferrer">代码</a>
+      <a href="#about">关于</a>
+      <span class="nav-sep" aria-hidden="true"></span>
+      <form class="search" id="search-form" role="search">
+        <input id="q" type="search" placeholder="搜索文章" aria-label="搜索文章" autocomplete="off">
+        <button type="button" id="search-btn" aria-label="搜索" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+        </button>
+      </form>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <p class="kicker">Notes · Code · Ideas <span>——</span></p>
+      <h1>把复杂的事，<span class="accent">讲清楚。</span></h1>
+      <p class="lede">记录工程实践、工具探索与阅读思考，也收藏生活中的灵感与发现。希望每一篇记录，都能成为解决问题的参考，或开启新思考的起点。</p>
+      <ul class="chips" aria-label="关注主题">
+        <li>前端工程化</li>
+        <li>Linux</li>
+        <li>设计系统</li>
+        <li>读书笔记</li>
+        <li>随手记录</li>
+      </ul>
+      <div class="actions">
+        <a class="btn btn-primary" href="#featured">
+          开始阅读
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/Jijizhazha-dot" data-github target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          查看 GitHub
+        </a>
+      </div>
+    </div>
+
+    <figure class="hero-art">
+      <svg viewBox="0 0 520 360" role="img" aria-label="森林绿山峦、橙色太阳与湖面的插画">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f8fbfa"/><stop offset="100%" stop-color="#eef5f1"/>
+          </linearGradient>
+          <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#d3e8dd"/><stop offset="100%" stop-color="#bcd9cb"/>
+          </linearGradient>
+          <linearGradient id="mid" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#a8cfba"/><stop offset="100%" stop-color="#84b8a2"/>
+          </linearGradient>
+          <linearGradient id="near" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2f7d68"/><stop offset="100%" stop-color="#176653"/>
+          </linearGradient>
+          <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#cfe6dc"/><stop offset="100%" stop-color="#a9cfc0"/>
+          </linearGradient>
+        </defs>
+
+        <rect width="520" height="360" fill="url(#sky)"/>
+        <circle cx="382" cy="92" r="33" fill="#f0a050"/>
+
+        <path d="M0 214c42-34 74-52 110-50 38 2 58 26 92 40 34 14 62 6 96-10 40-19 74-30 122-14v114H0Z" fill="url(#far)"/>
+        <path d="M0 250c36-30 68-46 104-42 36 4 56 28 92 36 40 9 66-14 104-18 44-5 78 16 116 30 34 12 70 10 104 2v50H0Z" fill="url(#mid)" opacity=".95"/>
+        <path d="M0 288h520v34c-52 8-96 12-140 6-46-6-80-18-128-16-56 2-98 18-152 20-38 2-72-2-100-8Z" fill="url(#lake)"/>
+        <path d="M0 322c54-16 92-30 138-24 44 6 66 22 108 22 46 0 76-16 116-16 52 0 92 20 158 26v30H0Z" fill="url(#near)"/>
+
+        <g fill="#0f4c3d">
+          <path d="M58 306l14-30 14 30zM58 318l14-22 14 22z"/>
+          <path d="M96 312l11-24 11 24zM96 322l11-18 11 18z"/>
+          <path d="M436 300l16-34 16 34zM436 314l16-24 16 24zM436 326l16-16 16 16z"/>
+          <path d="M476 312l12-26 12 26zM476 324l12-19 12 19z"/>
+        </g>
+
+        <g stroke="#176653" stroke-opacity=".45" stroke-width="1.6" fill="none" stroke-linecap="round">
+          <path d="M120 88c4-5 8-5 12 0M136 80c4-5 8-5 12 0M182 100c3-4 7-4 10 0"/>
+        </g>
+      </svg>
+      <figcaption class="hero-quote">在技术与生活的缝隙里，找到属于自己的节奏。</figcaption>
+    </figure>
+  </section>
+
+  <div class="wrap layout">
+    <div class="col-main">
+      <section class="block" id="featured">
+        <div class="block-head">
+          <h2>
+            <span class="ico" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5l2.6 5.6 6 .8-4.4 4.2 1.1 6-5.3-3-5.3 3 1.1-6L3.4 9.9l6-.8z"/></svg>
+            </span>
+            精选文章 <span class="en">Featured</span>
+          </h2>
+          <a href="archive.html">查看更多 →</a>
+        </div>
+        <div class="featured-grid" id="featured-list"></div>
+      </section>
+    </div>
+
+    <aside class="col-side">
+      <section class="card recent-card">
+        <div class="card-head">
+          <h3>
+            <span class="ico" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8" stroke-linecap="round"/></svg>
+            </span>
+            最近更新
+          </h3>
+          <a class="more" href="archive.html">更多&gt;&gt;</a>
+        </div>
+        <ul class="recent-list" id="recent-list"></ul>
+      </section>
+    </aside>
+  </div>
+
+  <section class="about-block wrap" id="about">
+    <div>
+      <h2>关于这个博客</h2>
+      <p>这个站点是纯静态的：<code>index.html</code> 负责首页，<code>article.html</code> 负责正文，文章本身是 <code>posts/</code> 目录里一个个 Markdown 文件，托管在 GitHub Pages 上。</p>
+      <p>加一篇文章只需要往 <code>posts/</code> 里上传一个 <code>.md</code> 文件：标题、日期、标签写在文件开头的 front matter 里，首页、归档、分类、标签都会自动更新。</p>
+    </div>
+    <div class="facts">
+      <dl>
+        <div class="fact"><dt>现在</dt><dd>写代码，也写字</dd></div>
+        <div class="fact"><dt>在做</dt><dd>前端工程化 · 设计系统</dd></div>
+        <div class="fact"><dt>喜欢</dt><dd>把复杂的事讲简单</dd></div>
+        <div class="fact"><dt>仓库</dt><dd><a href="https://github.com/Jijizhazha-dot" data-github target="_blank" rel="noopener noreferrer">github.com/Jijizhazha-dot</a></dd></div>
+        <div class="fact"><dt>联系</dt><dd><a id="mail-link" href="mailto:hello@example.com">hello@example.com</a></dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <span>慢慢记录，持续生长。<span class="footer-sep">·</span>© <span id="year">2026</span> 吉吉喳喳</span>
+    <span class="footer-links">
+      <a href="archive.html">归档</a>
+      <a href="tags.html">标签</a>
+      <a href="photos.html">图片</a>
+      <a href="#about">关于</a>
+      <a href="https://github.com/Jijizhazha-dot" data-github target="_blank" rel="noopener noreferrer">GitHub</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   数据：posts/ 目录 → posts/index.json → 文章数组
+   ============================================================ */
+const SITE = {
+  name: "吉吉喳喳",
+  email: "hello@example.com",
+  github: "https://github.com/Jijizhazha-dot",
+  repo: ""
+};
+
+const FALLBACK_POSTS = [
+  { slug: "2026-10-19-el-nino-guide", title: "超强厄尔尼诺来了：从成因到应对，一篇讲清", date: "2026-10-19", tag: "科普", minutes: 9, cover: "images/2026-10-19-el-nino-2.jpg", featured: true, excerpt: "10 月 9 日，国家气候中心通报：2026 年 9 月已形成一次超强厄尔尼诺事件。" },
+  { slug: "2026-10-19-sichuan", title: "四川，凭什么这么巴适", date: "2026-10-19", tag: "地理", minutes: 9, cover: "images/2026-10-19-sichuan-2.jpg", featured: true, excerpt: "48.6 万平方公里，山地、丘陵、平原、高原四种地貌同时存在。" },
+  { slug: "2026-10-18-weather-cold-front", title: "未来三天：长江以北持续偏冷，东北与长江沿线雨雪频繁", date: "2026-10-18", tag: "天气", minutes: 6, excerpt: "两股冷空气接力，长江以北气温持续偏低。" }
+];
+
+const CATEGORY_MAP = {
+  "前端": "技术实践", "工具": "技术实践", "Linux": "技术实践",
+  "读书": "阅读与思考",
+  "随笔": "记录与观察", "天气": "记录与观察", "科普": "记录与观察", "地理": "记录与观察"
+};
+const CATEGORY_ORDER = ["技术实践", "设计与方法", "阅读与思考", "记录与观察"];
+
+const $ = (sel) => document.querySelector(sel);
+const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+}[ch]));
+
+function fmtDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ""));
+  return m ? `${m[1]}.${m[2]}.${m[3]}` : String(iso || "");
+}
+
+function categoryOf(post) {
+  return post.category || CATEGORY_MAP[post.tag] || "记录与观察";
+}
+
+/* ---------- 三个来源 ---------- */
+const CACHE_TTL = 10 * 60 * 1000;
+const cacheKey = () => "dsh-posts:" + location.host + location.pathname;
+
+function readCache() {
+  try {
+    const raw = localStorage.getItem(cacheKey());
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    return Array.isArray(data.posts) ? data : null;
+  } catch (error) { return null; }
+}
+
+function writeCache(posts) {
+  try { localStorage.setItem(cacheKey(), JSON.stringify({ ts: Date.now(), posts: posts })); } catch (error) { }
+}
+
+function detectRepo() {
+  if (SITE.repo && /^[^/\s]+\/[^/\s]+$/.test(SITE.repo)) {
+    const parts = SITE.repo.split("/");
+    return { owner: parts[0], repo: parts[1] };
+  }
+  const m = /^([^.]+)\.github\.io$/i.exec(location.hostname || "");
+  if (!m) return null;
+  const segs = location.pathname.split("/").filter(Boolean);
+  const first = segs[0] && !/\.html?$/i.test(segs[0]) ? segs[0] : "";
+  return { owner: m[1], repo: first || m[1] + ".github.io" };
+}
+
+const isPostFile = (name) => /\.md$/i.test(name) && name.charAt(0) !== "_";
+
+function parseMeta(text) {
+  const src = String(text).replace(/\r\n?/g, "\n");
+  const m = /^---[ \t]*\n([\s\S]*?)\n---[ \t]*\n?([\s\S]*)$/.exec(src);
+  if (!m) return { meta: {}, body: src };
+  const meta = {};
+  m[1].split("\n").forEach((line) => {
+    const kv = /^([A-Za-z0-9_-]+)\s*:\s*(.*)$/.exec(line);
+    if (!kv) return;
+    let value = kv[2].trim();
+    if (/^(".*"|'.*')$/.test(value)) value = value.slice(1, -1);
+    meta[kv[1]] = value;
+  });
+  return { meta: meta, body: m[2] };
+}
+
+function makeExcerpt(body, limit) {
+  const max = limit || 96;
+  const plain = String(body)
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^>\s?/gm, "")
+    .replace(/(\*\*|__)(.*?)\1/g, "$2")
+    .replace(/(\*|_)(.*?)\1/g, "$2")
+    .replace(/`/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return plain.length > max ? plain.slice(0, max) + "…" : plain;
+}
+
+function normaliseEntry(entry) {
+  if (typeof entry === "string") {
+    const slug = entry.replace(/\.md$/i, "");
+    return { file: entry, slug: slug, title: slug, date: "", tag: "未分类" };
+  }
+  if (!entry || !entry.file) return null;
+  return {
+    file: entry.file,
+    slug: String(entry.file).replace(/\.md$/i, ""),
+    title: entry.title || String(entry.file).replace(/\.md$/i, ""),
+    date: entry.date || "",
+    tag: entry.tag || "未分类",
+    minutes: entry.minutes ? Number(entry.minutes) : 0,
+    category: entry.category || "",
+    cover: entry.cover || "",
+    featured: String(entry.featured || "") === "true",
+    excerpt: entry.excerpt || ""
+  };
+}
+
+function finishPost(post) {
+  return {
+    slug: post.slug,
+    title: post.title,
+    date: post.date || "",
+    tag: post.tag || "未分类",
+    minutes: post.minutes || 0,
+    category: categoryOf(post),
+    cover: post.cover || "",
+    featured: !!post.featured,
+    excerpt: post.excerpt || "",
+    url: "article.html?p=" + encodeURIComponent(post.slug)
+  };
+}
+
+async function fromManifest() {
+  const res = await fetch("posts/index.json", { cache: "no-cache" });
+  if (!res.ok) throw new Error("index.json " + res.status);
+  const data = await res.json();
+  const list = Array.isArray(data) ? data : (data && data.posts) || [];
+  const posts = list.map(normaliseEntry).filter(Boolean).map(finishPost);
+  return posts.length ? posts : null;
+}
+
+async function fromGitHub(target) {
+  const res = await fetch("https://api.github.com/repos/" + target.owner + "/" + target.repo + "/contents/posts",
+    { headers: { Accept: "application/vnd.github+json" }, cache: "no-cache" });
+  if (!res.ok) throw new Error("GitHub API " + res.status);
+  const items = await res.json();
+  return (Array.isArray(items) ? items : [])
+    .filter((item) => item && item.type === "file" && isPostFile(item.name))
+    .map((item) => item.name);
+}
+
+async function fromJsDelivr(target) {
+  const url = "https://data.jsdelivr.com/v1/packages/gh/" + target.owner + "/" + target.repo + "@main?structure=flat";
+  const res = await fetch(url, { cache: "no-cache" });
+  if (!res.ok) throw new Error("jsDelivr " + res.status);
+  const data = await res.json();
+  return (Array.isArray(data.files) ? data.files : [])
+    .map((file) => String(file && file.name ? file.name : ""))
+    .filter((name) => name.indexOf("/posts/") === 0)
+    .map((name) => name.slice("/posts/".length))
+    .filter(isPostFile);
+}
+
+async function loadOne(name, target) {
+  const slug = name.replace(/\.md$/i, "");
+  const urls = [];
+  if (target) urls.push("https://raw.githubusercontent.com/" + target.owner + "/" + target.repo + "/main/posts/" + encodeURIComponent(name));
+  urls.push("posts/" + encodeURIComponent(name));
+
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: "no-cache" });
+      if (!res.ok) continue;
+      const parsed = parseMeta(await res.text());
+      const meta = parsed.meta;
+      const chars = parsed.body.replace(/\s/g, "").length;
+      const fromName = /^(\d{4}-\d{2}-\d{2})/.exec(slug);
+      return finishPost({
+        slug: slug,
+        title: meta.title || slug,
+        date: /^\d{4}-\d{2}-\d{2}$/.test(meta.date || "") ? meta.date : (fromName ? fromName[1] : ""),
+        tag: meta.tag || "未分类",
+        minutes: meta.minutes ? Number(meta.minutes) : Math.max(1, Math.round(chars / 400)),
+        category: meta.category || "",
+        cover: meta.cover || "",
+        featured: String(meta.featured || "") === "true",
+        excerpt: meta.excerpt || makeExcerpt(parsed.body)
+      });
+    } catch (error) { /* 换下一个来源 */ }
+  }
+  return finishPost({ slug: slug, title: slug, tag: "未分类" });
+}
+
+async function loadPosts() {
+  if (!/^https?:$/.test(location.protocol)) return { posts: null, note: "本地预览：显示内置示例文章。" };
+
+  const cached = readCache();
+  if (cached && cached.posts.length && Date.now() - cached.ts < CACHE_TTL) return { posts: cached.posts };
+
+  try {
+    const posts = await fromManifest();
+    if (posts) { writeCache(posts); return { posts: posts }; }
+  } catch (error) { /* 继续 */ }
+
+  const target = detectRepo();
+  const listers = [];
+  if (target) listers.push(() => fromGitHub(target), () => fromJsDelivr(target));
+
+  for (const lister of listers) {
+    let names = [];
+    try { names = await lister(); } catch (error) { continue; }
+    if (!names.length) continue;
+    const posts = (await Promise.all(names.map((name) => loadOne(name, target))))
+      .sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    writeCache(posts);
+    return { posts: posts };
+  }
+
+  if (cached && cached.posts.length) {
+    return { posts: cached.posts, note: "显示的是本机缓存（更新于 " + new Date(cached.ts).toLocaleString() + "）。" };
+  }
+  return { posts: null, note: "读取 posts/ 目录失败，暂时显示内置示例。" };
+}
+
+/* ============================================================
+   渲染
+   ============================================================ */
+let allPosts = [];
+let keyword = "";
+
+const featuredEl = $("#featured-list");
+const recentEl = $("#recent-list");
+const clockIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8" stroke-linecap="round"/></svg>';
+
+function featuredCard(post) {
+  const cover = post.cover
+    ? '<img class="cover" src="' + esc(post.cover) + '" alt="' + esc(post.title) + '" loading="lazy" decoding="async">'
+    : "";
+  return '<article class="fcard">' +
+    '<a class="fcover" href="' + esc(post.url) + '">' + cover + "</a>" +
+    '<div class="body">' +
+      '<h3><a href="' + esc(post.url) + '">' + esc(post.title) + "</a></h3>" +
+      '<p class="excerpt">' + esc(post.excerpt) + "</p>" +
+      '<p class="meta"><span>分类：' + esc(post.tag) + "</span><span class=\"dot\">·</span><span>" + esc(fmtDate(post.date)) + "</span>" +
+        (post.minutes ? '<span class="dot">·</span><span>' + esc(post.minutes) + " 分钟</span>" : "") +
+      "</p>" +
+      '<a class="more" href="' + esc(post.url) + '">阅读全文 →</a>' +
+    "</div></article>";
+}
+
+function matches(post) {
+  if (!keyword) return true;
+  return [post.title, post.excerpt, post.tag, post.category].join(" ").toLowerCase().includes(keyword);
+}
+
+function renderRecent(posts) {
+  const sorted = [...posts].sort((a, b) =>
+    String(b.date + " " + (b.time || "")).localeCompare(String(a.date + " " + (a.time || "")))
+  );
+  recentEl.innerHTML = sorted.slice(0, 8).map((p) =>
+    '<li><a class="t" href="' + esc(p.url) + '">' + esc(p.title) + "</a>" +
+    '<span class="d">' + (p.date ? "[" + esc(p.date.slice(5)) + "]" : "") + "</span></li>"
+  ).join("");
+}
+
+function render() {
+  let featured = allPosts.filter((post) => post.featured);
+  if (!featured.length) featured = allPosts.slice(0, 3);
+  featured = featured.filter(matches);
+
+  const mainFeatured = featured.slice(0, 3);   // 精选 3 列并排对齐
+
+  const featuredBlock = document.getElementById("featured");
+  featuredEl.innerHTML = mainFeatured.map(featuredCard).join("");
+  if (featuredBlock) featuredBlock.hidden = !mainFeatured.length;
+
+  renderRecent(allPosts);
+}
+
+/* ============================================================
+   交互
+   ============================================================ */
+const searchForm = $("#search-form");
+const searchBtn = $("#search-btn");
+const searchInput = $("#q");
+const menuBtn = $("#menu-btn");
+const nav = $("#nav");
+
+function openSearch() {
+  searchForm.classList.add("is-open");
+  searchBtn.setAttribute("aria-expanded", "true");
+  searchInput.focus();
+}
+
+searchBtn.addEventListener("click", () => {
+  if (!searchForm.classList.contains("is-open")) { openSearch(); return; }
+  searchInput.blur();
+  searchForm.classList.remove("is-open");
+  searchBtn.setAttribute("aria-expanded", "false");
+});
+
+searchForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const target = document.getElementById("featured");
+  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+searchInput.addEventListener("input", () => {
+  keyword = searchInput.value.trim().toLowerCase();
+  render();
+});
+
+searchInput.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  searchInput.value = "";
+  keyword = "";
+  searchForm.classList.remove("is-open");
+  searchBtn.setAttribute("aria-expanded", "false");
+  render();
+});
+
+document.addEventListener("keydown", (event) => {
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement ? document.activeElement.tagName : "");
+  if (event.key === "/" && !typing) {
+    event.preventDefault();
+    if (nav.classList.contains("is-open") === false && window.matchMedia("(max-width:900px)").matches) {
+      nav.classList.add("is-open");
+      menuBtn.setAttribute("aria-expanded", "true");
+    }
+    openSearch();
+  }
+});
+
+menuBtn.addEventListener("click", () => {
+  const open = nav.classList.toggle("is-open");
+  menuBtn.setAttribute("aria-expanded", String(open));
+});
+
+nav.addEventListener("click", (event) => {
+  if (event.target.closest("a") && window.matchMedia("(max-width:900px)").matches) {
+    nav.classList.remove("is-open");
+    menuBtn.setAttribute("aria-expanded", "false");
+  }
+});
+
+/* ============================================================
+   初始化
+   ============================================================ */
+$("#year").textContent = new Date().getFullYear();
+document.querySelectorAll("[data-github]").forEach((a) => { a.href = SITE.github; });
+$("#mail-link").textContent = SITE.email;
+$("#mail-link").href = "mailto:" + SITE.email;
+
+allPosts = FALLBACK_POSTS.map(finishPost);
+render();
+
+loadPosts().then((result) => {
+  if (result.posts) allPosts = result.posts;
+  render();
+}).catch(() => {
+  render();
+});
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("is-in");
+      io.unobserve(entry.target);
+    }
+  });
+}, { rootMargin: "0px 0px -6% 0px", threshold: 0.06 });
+document.querySelectorAll(".hero-copy, .hero-art, .block, .card, .about-block").forEach((el) => {
+  el.classList.add("reveal");
+  io.observe(el);
+});
+</script>
+</body>
+</html>
